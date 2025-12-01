@@ -12,7 +12,7 @@ docker compose up --build
 docker compose ps
 
 # Access the site
-http://localhost:[your-port] - Gotta add later.
+http://localhost:[32770] - Gotta add later.
 ```
 
 ## Project Structure
@@ -70,8 +70,8 @@ legendary-mythical-pokemon-catalogue/
 
 ## Access
 
-- **Website**: http://localhost:[port] - Gotta add later.
-- **phpMyAdmin**: http://localhost:[port] - Gotta add later.
+- **Website**: http://localhost:[32770] - Gotta add later.
+- **phpMyAdmin**: http://localhost:[32769] - Gotta add later.
   - Username: student
   - Password: student
 
