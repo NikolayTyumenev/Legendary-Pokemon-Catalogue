@@ -1,52 +1,45 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= isset($pageTitle) ? $pageTitle : 'Legendary & Mythical Pokemon Catalogue' ?></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><?php echo $page_title ?? 'Legendary & Mythical Pokemon Catalogue'; ?></title>
     
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons (optional) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Bootstrap 5.3.7 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="index.php">
-                <i class="bi bi-star-fill"></i> Legendary Pokemon Catalogue
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.php">
-                            <i class="bi bi-house-fill"></i> Home
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="search.php">
-                            <i class="bi bi-search"></i> Search
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="team_builder.php">
-                            <i class="bi bi-people-fill"></i> Team Builder
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="create.php">
-                            <i class="bi bi-plus-circle-fill"></i> Add Pokemon
-                        </a>
-                    </li>
-                </ul>
-            </div>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="index.php">
+            <i class="bi bi-lightning-fill"></i> Legendary Pokemon
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.php"><i class="bi bi-house-fill"></i> Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="browse.php"><i class="bi bi-grid-fill"></i> Browse</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="team_builder.php"><i class="bi bi-people-fill"></i> Team Builder</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="add.php"><i class="bi bi-plus-circle-fill"></i> Add Pokemon</a>
+                </li>
+            </ul>
         </div>
-    </nav>
-    
-    <!-- Main Content Container -->
-    <div class="container">
-        <!-- Page content goes here -->
+    </div>
+</nav>
+
+<!-- Main Content Container -->
+<div class="container my-4">

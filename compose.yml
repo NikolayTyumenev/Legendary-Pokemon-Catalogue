@@ -5,8 +5,7 @@ services:
     ports:
       - "0:80"
     volumes:
-      - ./:/var/www
-      - ./public.conf:/etc/apache2/sites-available/000-default.conf
+      - ../:/var/www/html
     environment:
       PHP_DISPLAY_ERRORS: 1
       PHP_ERROR_REPORTING: E_ALL
@@ -19,11 +18,11 @@ services:
       - "0:3306"
     environment:
       MYSQL_ROOT_PASSWORD: studentpass
-      MYSQL_DATABASE: legendary_pokemon_catalogue
+      MYSQL_DATABASE: dmit2025
       MYSQL_USER: student
       MYSQL_PASSWORD: student
     volumes:
-      - ./data/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin

@@ -1,0 +1,83 @@
+POKEMON DATA - READY TO IMPORT
+
+QUICK START GUIDE
+
+1. Start Docker:
+   docker compose up --build
+
+2. Access phpMyAdmin (check docker compose ps for port):
+   http://localhost:[port]
+   Username: student
+   Password: student
+
+3. Import Pokemon data:
+   - Select database: dmit2025
+   - Go to "SQL" tab
+   - Paste the INSERT statements from your document
+   - Click "Go"
+
+4. Access your website (check docker compose ps for port):
+   http://localhost:[port]
+
+SAMPLE POKEMON DATA (First 3 for testing)
+
+-- Generation 1 - Kanto
+INSERT INTO pokemon VALUES 
+(NULL, 'Articuno', 144, 'Ice', 'Flying', 'Legendary', 1, 'Kanto', 
+ 90, 85, 100, 95, 125, 85, 580, 
+ 'articuno.png', 'articuno_shiny.png', FALSE,
+ 'A legendary bird Pokémon that is said to appear to doomed people who are lost in icy mountains.',
+ 'Articuno is said to live in icy mountains and appears to travelers lost in snow.',
+ 'Seafoam Islands after 8 badges',
+ 'Legendary Birds',
+ 'Pressure, Snow Cloak',
+ 'Freeze-Dry',
+ 1.7, 55.4,
+ FALSE,
+ 'RBY, GSC, FRLG, HGSS, XY, LGPE',
+ NOW(), NOW()),
+
+(NULL, 'Zapdos', 145, 'Electric', 'Flying', 'Legendary', 1, 'Kanto',
+ 90, 90, 85, 125, 90, 100, 580,
+ 'zapdos.png', 'zapdos_shiny.png', FALSE,
+ 'A legendary bird Pokémon that is said to appear from clouds while dropping enormous lightning bolts.',
+ 'Zapdos nests in thunderclouds and gains power from lightning strikes.',
+ 'Power Plant in Kanto',
+ 'Legendary Birds',
+ 'Pressure, Static',
+ 'Thunder Shock',
+ 1.6, 52.6,
+ FALSE,
+ 'RBY, GSC, FRLG, HGSS, XY, LGPE',
+ NOW(), NOW()),
+
+(NULL, 'Moltres', 146, 'Fire', 'Flying', 'Legendary', 1, 'Kanto',
+ 90, 100, 90, 125, 85, 90, 580,
+ 'moltres.png', 'moltres_shiny.png', FALSE,
+ 'A legendary bird Pokémon that is said to bring early spring to the wintry lands it visits.',
+ 'Moltres migrates from the south bringing spring. Heals in volcanoes.',
+ 'Victory Road after 8 badges',
+ 'Legendary Birds',
+ 'Pressure, Flame Body',
+ 'Heat Wave',
+ 2.0, 60.0,
+ FALSE,
+ 'RBY, GSC, FRLG, HGSS, XY, LGPE',
+ NOW(), NOW());
+
+COMPLETE DATA FILE
+document contains the COMPLETE SQL with ALL ~95 Pokemon.
+Just copy and paste it all into phpMyAdmin!
+
+Generations included:
+- Gen 1 (Kanto): 5 Pokemon
+- Gen 2 (Johto): 6 Pokemon  
+- Gen 3 (Hoenn): 10 Pokemon
+- Gen 4 (Sinnoh): 14 Pokemon
+- Gen 5 (Unova): 13 Pokemon
+- Gen 6 (Kalos): 6 Pokemon
+- Gen 7 (Alola): 22 Pokemon (11 regular + 11 Ultra Beasts)
+- Gen 8 (Galar): 12 Pokemon
+- Gen 9 (Paldea): 7 Pokemon
+
+Total: 95 Legendary & Mythical Pokemon!

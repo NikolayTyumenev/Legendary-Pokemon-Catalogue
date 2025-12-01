@@ -1,12 +1,16 @@
--- ============================================
--- COMPLETE LEGENDARY & MYTHICAL POKEMON DATABASE
--- ALL GENERATIONS (1-9)
--- ============================================
--- Total: ~80 Legendary and Mythical Pokemon
--- ============================================
+-- LEGENDARY & MYTHICAL POKEMON DATABASE
+-- Database: dmit2025 (matches compose.yml)
 
+-- This database will be auto-created by Docker
+-- MySQL container creates MYSQL_DATABASE automatically
+
+-- Drop existing tables if they exist (for clean reinstall)
+DROP TABLE IF EXISTS pokemon_tags;
+DROP TABLE IF EXISTS tags;
+DROP TABLE IF EXISTS pokemon_images;
 DROP TABLE IF EXISTS pokemon;
 
+-- Create pokemon table
 CREATE TABLE pokemon (
   -- PRIMARY KEY
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -33,23 +37,18 @@ CREATE TABLE pokemon (
   speed INT NOT NULL,
   base_stat_total INT NOT NULL,
   
-  -- IMAGES (for Multi-Image Gallery)
+  -- IMAGES (main images)
   regular_image VARCHAR(255) NOT NULL,
   shiny_image VARCHAR(255) NULL,
   has_alternate_forms BOOLEAN DEFAULT FALSE,
-  alternate_form_images TEXT NULL,
-  form_descriptions TEXT NULL,
   
   -- DESCRIPTION & LORE
   description TEXT NOT NULL,
   lore_story TEXT NULL,
   how_to_obtain TEXT NULL,
   
-  -- TAGGING SYSTEM
-  legendary_group VARCHAR(100) NULL,
-  tags TEXT NULL,
-  
   -- ADDITIONAL INFO
+  legendary_group VARCHAR(100) NULL,
   abilities TEXT NULL,
   signature_move VARCHAR(100) NULL,
   height_m DECIMAL(4,2) NULL,
@@ -70,9 +69,43 @@ CREATE TABLE pokemon (
   INDEX idx_legendary_group (legendary_group)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ============================================
+-- Create pokemon_images table (Challenge #4: Multi-Image Gallery)
+CREATE TABLE pokemon_images (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  pokemon_id INT NOT NULL,
+  image_path VARCHAR(255) NOT NULL,
+  form_name VARCHAR(100) NULL COMMENT 'e.g., Mega X, Mega Y, Primal',
+  display_order INT DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  
+  FOREIGN KEY (pokemon_id) REFERENCES pokemon(id) ON DELETE CASCADE,
+  INDEX idx_pokemon_id (pokemon_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Create tags table (Challenge #6: Tagging System)
+CREATE TABLE tags (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  tag_name VARCHAR(50) NOT NULL UNIQUE,
+  tag_slug VARCHAR(50) NOT NULL UNIQUE COMMENT 'URL-friendly version',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  
+  INDEX idx_tag_slug (tag_slug)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Create pokemon_tags junction table (Challenge #6: Tagging System)
+CREATE TABLE pokemon_tags (
+  pokemon_id INT NOT NULL,
+  tag_id INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  
+  PRIMARY KEY (pokemon_id, tag_id),
+  FOREIGN KEY (pokemon_id) REFERENCES pokemon(id) ON DELETE CASCADE,
+  FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Total: ~95 Pokemon across all 9 generations
+
 -- GENERATION 1 - KANTO (5 Pokemon)
--- ============================================
 
 INSERT INTO pokemon VALUES 
 (NULL, 'Articuno', 144, 'Ice', 'Flying', 'Legendary', 1, 'Kanto', 90, 85, 100, 95, 125, 85, 580, 'articuno.png', 'articuno_shiny.png', FALSE, NULL, NULL, 'A legendary bird Pokémon that is said to appear to doomed people who are lost in icy mountains.', 'Articuno is said to live in icy mountains and appears to travelers lost in snow.', 'Seafoam Islands after 8 badges', 'Legendary Birds', 'Legendary,Generation 1,Ice,Flying,Kanto,Trio', 'Pressure, Snow Cloak', 'Freeze-Dry', 1.7, 55.4, FALSE, 'RBY, GSC, FRLG, HGSS, XY, LGPE', NOW(), NOW()),
@@ -85,9 +118,7 @@ INSERT INTO pokemon VALUES
 
 (NULL, 'Mew', 151, 'Psychic', NULL, 'Mythical', 1, 'Kanto', 100, 100, 100, 100, 100, 100, 600, 'mew.png', 'mew_shiny.png', FALSE, NULL, NULL, 'So rare that it is still said to be a mirage by many experts.', 'Mew possesses the genetic composition of all Pokemon and is their ancestor.', 'Event-exclusive only', NULL, 'Mythical,Generation 1,Psychic,Kanto,Event-Exclusive', 'Synchronize', 'Psychic', 0.4, 4.0, TRUE, 'Events Only', NOW(), NOW());
 
--- ============================================
 -- GENERATION 2 - JOHTO (6 Pokemon)
--- ============================================
 
 INSERT INTO pokemon VALUES 
 (NULL, 'Raikou', 243, 'Electric', NULL, 'Legendary', 2, 'Johto', 90, 85, 75, 115, 100, 115, 580, 'raikou.png', 'raikou_shiny.png', FALSE, NULL, NULL, 'The rain clouds it carries let it fire thunderbolts at will.', 'Raikou embodies the speed of lightning and roars like thunder.', 'Roaming Johto after Burned Tower', 'Legendary Beasts', 'Legendary,Generation 2,Electric,Johto,Trio,Roaming', 'Pressure, Inner Focus', 'Thunder', 1.9, 178.0, FALSE, 'GSC, FRLG, HGSS', NOW(), NOW()),
@@ -102,9 +133,7 @@ INSERT INTO pokemon VALUES
 
 (NULL, 'Celebi', 251, 'Psychic', 'Grass', 'Mythical', 2, 'Johto', 100, 100, 100, 100, 100, 100, 600, 'celebi.png', 'celebi_shiny.png', FALSE, NULL, NULL, 'This Pokemon wanders across time. Forests flourish where it appears.', 'Celebi travels through time and only appears during times of peace.', 'Event-exclusive, Pokemon Bank', NULL, 'Mythical,Generation 2,Psychic,Grass,Johto,Event-Exclusive,Time Travel', 'Natural Cure', 'Future Sight', 0.6, 5.0, TRUE, 'Events, Pokemon Bank', NOW(), NOW());
 
--- ============================================
 -- GENERATION 3 - HOENN (10 Pokemon)
--- ============================================
 
 INSERT INTO pokemon VALUES 
 (NULL, 'Regirock', 377, 'Rock', NULL, 'Legendary', 3, 'Hoenn', 80, 100, 200, 50, 100, 50, 580, 'regirock.png', 'regirock_shiny.png', FALSE, NULL, NULL, 'Regirock was sealed away long ago. It repairs itself with rocks.', 'Made entirely of rocks, sealed in ancient tomb, repairs with new rocks.', 'Desert Ruins puzzle', 'Legendary Titans', 'Legendary,Generation 3,Rock,Hoenn,Trio,Golem', 'Clear Body, Sturdy', 'Stone Edge', 1.7, 230.0, FALSE, 'RSE, Pt, B2W2, ORAS', NOW(), NOW()),
@@ -127,9 +156,7 @@ INSERT INTO pokemon VALUES
 
 (NULL, 'Deoxys', 386, 'Psychic', NULL, 'Mythical', 3, 'Hoenn', 50, 150, 50, 150, 50, 150, 600, 'deoxys.png', 'deoxys_shiny.png', TRUE, 'deoxys_attack.png,deoxys_defense.png,deoxys_speed.png', 'Normal, Attack, Defense, Speed forms', 'DNA of space virus mutated after laser beam exposure.', 'Alien virus that can change forms to boost different stats.', 'Birth Island, Delta Episode', NULL, 'Mythical,Generation 3,Psychic,Hoenn,Event-Exclusive,Forms', 'Pressure', 'Psycho Boost', 1.7, 60.8, TRUE, 'Events, FRLG, ORAS', NOW(), NOW());
 
--- ============================================
 -- GENERATION 4 - SINNOH (14 Pokemon)
--- ============================================
 
 INSERT INTO pokemon VALUES 
 (NULL, 'Uxie', 480, 'Psychic', NULL, 'Legendary', 4, 'Sinnoh', 75, 75, 130, 75, 130, 95, 580, 'uxie.png', 'uxie_shiny.png', FALSE, NULL, NULL, 'Known as the Being of Knowledge. Can wipe memories with a glare.', 'Known as the Being of Knowledge, one of the lake guardians.', 'Lake Acuity after story', 'Lake Guardians', 'Legendary,Generation 4,Psychic,Sinnoh,Trio', 'Levitate', 'Confusion', 0.3, 0.3, FALSE, 'DPPt, BDSP', NOW(), NOW()),
@@ -160,9 +187,7 @@ INSERT INTO pokemon VALUES
 
 (NULL, 'Arceus', 493, 'Normal', NULL, 'Mythical', 4, 'Sinnoh', 120, 120, 120, 120, 120, 120, 720, 'arceus.png', 'arceus_shiny.png', TRUE, 'arceus_types.png', 'Can change type with plates/Z-Crystals', 'According to legend, it shaped the universe with its 1,000 arms.', 'The Original One that shaped the universe with 1,000 arms.', 'Event-exclusive, Hall of Origin', NULL, 'Mythical,Generation 4,Normal,Sinnoh,Event-Exclusive,God Pokemon,Type Change', 'Multitype', 'Judgment', 3.2, 320.0, TRUE, 'Events, BDSP, PLA', NOW(), NOW());
 
--- ============================================
 -- GENERATION 5 - UNOVA (13 Pokemon)
--- ============================================
 
 INSERT INTO pokemon VALUES 
 (NULL, 'Cobalion', 638, 'Steel', 'Fighting', 'Legendary', 5, 'Unova', 91, 90, 129, 90, 72, 108, 580, 'cobalion.png', 'cobalion_shiny.png', FALSE, NULL, NULL, 'It has a body and heart of steel. It intimidated Pokémon with its glare.', 'Leader of Swords of Justice, protected Pokemon during war.', 'Mistralton Cave', 'Swords of Justice', 'Legendary,Generation 5,Steel,Fighting,Unova,Quartet', 'Justified', 'Sacred Sword', 2.1, 250.0, FALSE, 'BW, B2W2, ORAS, SwSh Crown', NOW(), NOW()),
@@ -191,9 +216,7 @@ INSERT INTO pokemon VALUES
 
 (NULL, 'Victini', 494, 'Psychic', 'Fire', 'Mythical', 5, 'Unova', 100, 100, 100, 100, 100, 100, 600, 'victini.png', 'victini_shiny.png', FALSE, NULL, NULL, 'This Pokemon brings victory. It shares its infinite energy with those who touch it.', 'Victory Pokemon that generates unlimited energy and brings victory.', 'Liberty Garden with event item', NULL, 'Mythical,Generation 5,Psychic,Fire,Unova,Event-Exclusive', 'Victory Star', 'V-create', 0.4, 4.0, TRUE, 'BW with event item', NOW(), NOW());
 
--- ============================================
 -- GENERATION 6 - KALOS (6 Pokemon)
--- ============================================
 
 INSERT INTO pokemon VALUES 
 (NULL, 'Xerneas', 716, 'Fairy', NULL, 'Legendary', 6, 'Kalos', 126, 131, 95, 131, 98, 99, 680, 'xerneas.png', 'xerneas_shiny.png', TRUE, 'xerneas_active.png', 'Neutral Mode (dormant), Active Mode (in battle)', 'Legends say it can share eternal life. It slept for a thousand years.', 'Life Pokemon that shares eternal life and awakened from 1000 year sleep.', 'Team Flare HQ in X', 'Aura Trio', 'Legendary,Generation 6,Fairy,Kalos,Box Legendary,Modes', 'Fairy Aura', 'Geomancy', 3.0, 215.0, FALSE, 'X, USUM', NOW(), NOW()),
@@ -208,9 +231,7 @@ INSERT INTO pokemon VALUES
 
 (NULL, 'Volcanion', 721, 'Fire', 'Water', 'Mythical', 6, 'Kalos', 80, 110, 120, 130, 90, 70, 600, 'volcanion.png', 'volcanion_shiny.png', FALSE, NULL, NULL, 'It expels its internal steam from the arms on its back.', 'Steam Pokemon with unique Fire/Water typing, expels steam.', 'Event-exclusive', NULL, 'Mythical,Generation 6,Fire,Water,Kalos,Event-Exclusive', 'Water Absorb', 'Steam Eruption', 1.7, 195.0, TRUE, 'Events', NOW(), NOW());
 
--- ============================================
 -- GENERATION 7 - ALOLA (11 Pokemon + 11 Ultra Beasts)
--- ============================================
 
 INSERT INTO pokemon VALUES 
 (NULL, 'Type: Null', 772, 'Normal', NULL, 'Legendary', 7, 'Alola', 95, 95, 95, 95, 95, 59, 534, 'type_null.png', 'type_null_shiny.png', FALSE, NULL, NULL, 'A Pokemon made through genetic modification to be the ultimate weapon.', 'Synthetic Pokemon created to fight Ultra Beasts, evolves into Silvally.', 'Given by Gladion', NULL, 'Legendary,Generation 7,Normal,Alola,Synthetic,Pre-Evolution', 'Battle Armor', 'Tri Attack', 1.9, 120.5, FALSE, 'SM, USUM, SwSh', NOW(), NOW()),
@@ -236,6 +257,7 @@ INSERT INTO pokemon VALUES
 (NULL, 'Necrozma', 800, 'Psychic', NULL, 'Legendary', 7, 'Alola', 97, 107, 101, 127, 89, 79, 600, 'necrozma.png', 'necrozma_shiny.png', TRUE, 'necrozma_dusk.png,necrozma_dawn.png,necrozma_ultra.png', 'Base, Dusk Mane, Dawn Wings, Ultra forms', 'Reminiscent of the Ultra Beasts, this life-form seeks light to survive.', 'Prism Pokemon that absorbs light, can fuse with Solgaleo/Lunala.', 'Ten Carat Hill post-game', 'Light Trio', 'Legendary,Generation 7,Psychic,Alola,Box Legendary,Fusion,Forms', 'Prism Armor, Neuroforce', 'Photon Geyser', 2.4, 230.0, FALSE, 'USUM, SwSh Crown', NOW(), NOW());
 
 -- Ultra Beasts (Generation 7)
+
 INSERT INTO pokemon VALUES 
 (NULL, 'Nihilego', 793, 'Rock', 'Poison', 'Ultra Beast', 7, 'Alola', 109, 53, 47, 127, 131, 103, 570, 'nihilego.png', 'nihilego_shiny.png', FALSE, NULL, NULL, 'One of the Ultra Beasts. It appeared from an Ultra Wormhole.', 'Ultra Beast that resembles a jellyfish and possesses hosts.', 'Wela Volcano Park in USUM', 'Ultra Beasts', 'Ultra Beast,Generation 7,Rock,Poison,Alola,UB-01', 'Beast Boost', 'Power Gem', 1.2, 55.5, FALSE, 'SM, USUM, SwSh Crown', NOW(), NOW()),
 
@@ -260,6 +282,7 @@ INSERT INTO pokemon VALUES
 (NULL, 'Blacephalon', 806, 'Fire', 'Ghost', 'Ultra Beast', 7, 'Alola', 53, 127, 53, 151, 79, 107, 570, 'blacephalon.png', 'blacephalon_shiny.png', FALSE, NULL, NULL, 'One of the Ultra Beasts. It steals vitality by making heads explode.', 'Ultra Beast that makes its own head explode as an attack.', 'Poni Grove in UM', 'Ultra Beasts', 'Ultra Beast,Generation 7,Fire,Ghost,Alola,UB Burst', 'Beast Boost', 'Mind Blown', 1.8, 13.0, FALSE, 'UM, SwSh Crown', NOW(), NOW());
 
 -- Mythicals (Generation 7)
+
 INSERT INTO pokemon VALUES 
 (NULL, 'Magearna', 801, 'Steel', 'Fairy', 'Mythical', 7, 'Alola', 80, 95, 115, 130, 115, 65, 600, 'magearna.png', 'magearna_shiny.png', TRUE, 'magearna_original.png', 'Regular form, Original Color form', 'Built about 500 years ago, it can sense emotions.', 'Artificial Pokemon built 500 years ago as a gift for a princess.', 'QR code event', NULL, 'Mythical,Generation 7,Steel,Fairy,Alola,Event-Exclusive,Artificial', 'Soul-Heart', 'Fleur Cannon', 1.0, 80.5, TRUE, 'SM Event, USUM', NOW(), NOW()),
 
@@ -271,9 +294,7 @@ INSERT INTO pokemon VALUES
 
 (NULL, 'Melmetal', 809, 'Steel', NULL, 'Mythical', 7, 'Alola', 135, 143, 143, 80, 65, 34, 600, 'melmetal.png', 'melmetal_shiny.png', TRUE, 'melmetal_gmax.png', 'Regular form, Gigantamax form in SwSh', 'Centrifugal force is behind its punches, which are strong enough to shatter mountains.', 'Evolution of Meltan with incredibly powerful metal fists.', 'Evolve Meltan in Pokemon GO', NULL, 'Mythical,Generation 7,Steel,Alola,Gigantamax', 'Iron Fist', 'Double Iron Bash', 2.5, 800.0, FALSE, 'Pokemon GO, LGPE, HOME', NOW(), NOW());
 
--- ============================================
 -- GENERATION 8 - GALAR (12 Pokemon)
--- ============================================
 
 INSERT INTO pokemon VALUES 
 (NULL, 'Zacian', 888, 'Fairy', NULL, 'Legendary', 8, 'Galar', 92, 130, 115, 80, 115, 138, 670, 'zacian.png', 'zacian_shiny.png', TRUE, 'zacian_crowned.png', 'Hero of Many Battles (Fairy), Crowned Sword (Fairy/Steel with Rusted Sword)', 'Known as a legendary hero, this Pokemon absorbs metal to power up.', 'Hero Pokemon that saved Galar with its sword in ancient times.', 'Slumbering Weald post-game', 'Hero Duo', 'Legendary,Generation 8,Fairy,Galar,Box Legendary,Forms', 'Intrepid Sword', 'Behemoth Blade', 2.8, 110.0, FALSE, 'Sw, SwSh Crown', NOW(), NOW()),
@@ -302,9 +323,7 @@ INSERT INTO pokemon VALUES
 INSERT INTO pokemon VALUES 
 (NULL, 'Zarude', 893, 'Dark', 'Grass', 'Mythical', 8, 'Galar', 105, 120, 105, 70, 95, 105, 600, 'zarude.png', 'zarude_shiny.png', TRUE, 'zarude_dada.png', 'Regular form, Dada Zarude (with scarf)', 'Within dense forests, this Pokemon lives in a pack with others.', 'Rogue Monkey Pokemon that swings through forests with vines.', 'Event-exclusive', NULL, 'Mythical,Generation 8,Dark,Grass,Galar,Event-Exclusive,Forms', 'Leaf Guard', 'Jungle Healing', 1.8, 70.0, TRUE, 'Events, SwSh', NOW(), NOW());
 
--- ============================================
 -- GENERATION 9 - PALDEA (7 Pokemon)
--- ============================================
 
 INSERT INTO pokemon VALUES 
 (NULL, 'Wo-Chien', 1001, 'Dark', 'Grass', 'Legendary', 9, 'Paldea', 85, 85, 100, 95, 135, 70, 570, 'wo_chien.png', 'wo_chien_shiny.png', FALSE, NULL, NULL, 'The grudge of a person punished for writing the king\'s evil deeds became this Pokemon.', 'Ruinous Pokemon formed from grudge-filled wooden tablets.', 'Collect stakes and open shrine', 'Treasures of Ruin', 'Legendary,Generation 9,Dark,Grass,Paldea,Quartet', 'Tablets of Ruin', 'Ruination', 1.5, 74.2, FALSE, 'SV', NOW(), NOW()),
@@ -325,7 +344,5 @@ INSERT INTO pokemon VALUES
 INSERT INTO pokemon VALUES 
 (NULL, 'Pecharunt', 1025, 'Poison', 'Ghost', 'Mythical', 9, 'Paldea', 88, 88, 160, 88, 88, 88, 600, 'pecharunt.png', 'pecharunt_shiny.png', FALSE, NULL, NULL, 'It feeds others toxic mochi that draw out desires and capabilities.', 'Subjugation Pokemon that controls others with poisonous mochi.', 'Mochi Mayhem event', NULL, 'Mythical,Generation 9,Poison,Ghost,Paldea,Event-Exclusive', 'Poison Puppeteer', 'Malignant Chain', 0.3, 0.3, TRUE, 'SV Mochi Mayhem', NOW(), NOW());
 
--- ============================================
 -- END OF DATABASE
 -- Total Pokemon: ~95 (including all forms as separate entries)
--- ============================================
