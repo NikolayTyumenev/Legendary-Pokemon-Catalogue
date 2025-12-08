@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once('../private/connect.php');
+require_once('../private/authentication.php');
 $connection = db_connect();
 
 $page_title = "Team Builder - Legendary Pokemon Catalogue";
@@ -19,7 +20,7 @@ include('includes/header.php');
         <div class="alert alert-info">
             <i class="bi bi-info-circle"></i> Your team is empty. Add Pokemon from the list below.
         </div>
-        <!-- TODO: Display selected Pokemon -->
+        <!-- TODO: Display selected Pokemon - FOR PART 3! we are not done yet -->
     </div>
 </div>
 
@@ -32,7 +33,7 @@ include('includes/header.php');
                 <h5 class="mb-0"><i class="bi bi-graph-up"></i> Average Stats</h5>
             </div>
             <div class="card-body">
-                <p>TODO: Calculate and display average stats</p>
+                <p>Calculate and display average stats</p>
             </div>
         </div>
     </div>
@@ -44,7 +45,7 @@ include('includes/header.php');
                 <h5 class="mb-0"><i class="bi bi-pie-chart-fill"></i> Type Distribution</h5>
             </div>
             <div class="card-body">
-                <p>TODO: Show type counts with badges</p>
+                <p>Show type counts with badges</p>
             </div>
         </div>
     </div>
@@ -56,7 +57,7 @@ include('includes/header.php');
                 <h5 class="mb-0"><i class="bi bi-trophy-fill"></i> Strongest in Each Category</h5>
             </div>
             <div class="card-body">
-                <p>TODO: Show Pokemon with highest in each stat</p>
+                <p>Show Pokemon with highest in each stat</p>
             </div>
         </div>
     </div>
@@ -68,7 +69,7 @@ include('includes/header.php');
                 <h5 class="mb-0"><i class="bi bi-exclamation-triangle-fill"></i> Team Weaknesses</h5>
             </div>
             <div class="card-body">
-                <p>TODO: Analyze shared weaknesses</p>
+                <p>Analyze shared weaknesses</p>
             </div>
         </div>
     </div>
@@ -81,8 +82,8 @@ include('includes/header.php');
     </div>
     <div class="card-body">
         <div class="row g-3">
-            <!-- TODO: Display all Pokemon with "Add to Team" buttons -->
-            <p>TODO: Load Pokemon from database</p>
+            <!-- TODO: Display all Pokemon with "Add to Team" buttons - FOR PART 3! we are not done yet -->
+            <p>Load Pokemon from database</p>
         </div>
     </div>
 </div>

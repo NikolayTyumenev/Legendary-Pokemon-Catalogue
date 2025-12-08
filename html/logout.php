@@ -1,6 +1,9 @@
 <?php
-session_start();
-session_destroy();
+session_start(); 
+require_once('../private/authentication.php');
+
+logout_user();
+
 header('Location: index.php');
 exit;
 ?>

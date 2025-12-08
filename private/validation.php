@@ -1,5 +1,5 @@
 <?php
-// Form validation functions
+// Form validation functions - already included where needed so can leave empty
 
 // TODO: Implement validation functions
 // - validate_pokemon($data)

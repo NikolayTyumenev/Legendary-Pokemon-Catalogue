@@ -1,5 +1,5 @@
 <?php
-// Prepared statement functions
+// Prepared statement functions - already included where needed so can leave empty
 
 // TODO: Implement prepared statement helpers
 // - find_pokemon_by_id($connection, $id)
