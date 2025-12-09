@@ -4,7 +4,7 @@
 <footer class="bg-dark text-white text-center py-3 mt-5">
     <div class="container">
         <p class="mb-0">&copy; 2024 Legendary & Mythical Pokemon Catalogue</p>
-        <p class="mb-0"><small>Data sourced from <a href="https://www.serebii.net" class="text-white">Serebii</a> and <a href="https://bulbapedia.bulbagarden.net/wiki/Browse:Pok%C3%A9dex" class="text-white">Bulbapedia</a></small></p>
+        <p class="mb-0"><small>Data sourced from <a href="https://www.serebii.net" class="text-white">Serebii.net</a></small></p>
     </div>
 </footer>
 
