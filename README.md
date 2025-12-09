@@ -75,7 +75,8 @@ legendary-mythical-pokemon-catalogue/
   - Username: student
   - Password: student
 
-## Data Source
+## Data Sources
 
 **Serebii.net** - https://www.serebii.net/pokemon/all.shtml (for an easy overview with all necessary information - got to type the pokemon name since no filter available)
 **Legends & Mythicals** - https://www.serebii.net/pokemon/legendary.shtml (for viewing current legendaries and mythicals available)
+**Bulbapedia** - https://bulbapedia.bulbagarden.net/wiki/Main_Page (comprehensive Pokemon encyclopedia)
