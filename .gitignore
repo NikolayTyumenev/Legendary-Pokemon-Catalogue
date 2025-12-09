@@ -1,20 +1,43 @@
-# Ignore OS/system files
+# OS generated files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 desktop.ini
 
-# Ignore version control
-.git
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 
-# Ignore container volumes, logs, temp data
-node_modules/
-vendor/
+# Log files
 *.log
-*.bak
-*.tmp
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Ignore hidden files/folders
-.*
-!.htaccess
-!.dockerignore
-!.gitignore
+# Temporary files
+*.tmp
+*.bak
+*.cache
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Composer/NPM
+vendor/
+node_modules/
+
+# Docker volumes
+mysql-data/
+
+# DO NOT IGNORE POKEMON IMAGES - WE WANT THEM IN GIT!
+# When you add Pokemon through admin, images get committed to repo
+# When someone clones, they get all the images automatically
