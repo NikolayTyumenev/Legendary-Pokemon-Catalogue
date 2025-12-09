@@ -91,14 +91,18 @@ CREATE TABLE group_3_catalogue_admin (
 
 -- Insert admin accounts
 -- Password for ALL accounts: student
--- Hash: $2y$10$CwTycUXWue0Thq9StjUM0uyhgokoo7h0LJM8ibWJkXs7.1wXxqmQy
+-- Hash: $2a$12$xzH1wPZchaHFl3tpYIAJBO5F5Jh6EIDqkQcM9YQiNBESmS2foLYOC
 
 INSERT INTO group_3_catalogue_admin (username, password) VALUES
-('Nikolay', '$2y$10$CwTycUXWue0Thq9StjUM0uyhgokoo7h0LJM8ibWJkXs7.1wXxqmQy'),
-('Charis', '$2y$10$CwTycUXWue0Thq9StjUM0uyhgokoo7h0LJM8ibWJkXs7.1wXxqmQy'),
-('Sheena', '$2y$10$CwTycUXWue0Thq9StjUM0uyhgokoo7h0LJM8ibWJkXs7.1wXxqmQy'),
-('Ady', '$2y$10$CwTycUXWue0Thq9StjUM0uyhgokoo7h0LJM8ibWJkXs7.1wXxqmQy'),
-('instructor', '$2y$10$CwTycUXWue0Thq9StjUM0uyhgokoo7h0LJM8ibWJkXs7.1wXxqmQy');
+('Nikolay', '$2a$12$xzH1wPZchaHFl3tpYIAJBO5F5Jh6EIDqkQcM9YQiNBESmS2foLYOC'),
+('Charis',2$xzH1wPZchaHFl3tpYIAJBO5F5Jh6EIDqkQcM9YQiNBESmS2foLYOC'),
+('Aidan', '$2a$12$xzH1wPZchaHFl3tpYIAJBO5F5Jh6EIDqkQcM9YQiNBESmS2foLYOC'),
+('Evan', '$2a$12$xzH1wPZchaHFl3tpYIAJBO5F5Jh6EIDqkQcM9YQiNBESmS2foLYOC'),
+('Sam', '$2a$12$xzH1wPZchaHFl3tpYIAJBO5F5Jh6EIDqkQcM9YQiNBESmS2foLYOC'),
+('Charis', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
+('Sheena', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
+('Ady', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
+('instructor', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi');
 
 -- ============================================
 -- POKEMON DATA - ALL LEGENDARIES & MYTHICALS
