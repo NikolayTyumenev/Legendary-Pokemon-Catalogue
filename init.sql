@@ -95,14 +95,10 @@ CREATE TABLE group_3_catalogue_admin (
 
 INSERT INTO group_3_catalogue_admin (username, password) VALUES
 ('Nikolay', '$2a$12$xzH1wPZchaHFl3tpYIAJBO5F5Jh6EIDqkQcM9YQiNBESmS2foLYOC'),
-('Charis',2$xzH1wPZchaHFl3tpYIAJBO5F5Jh6EIDqkQcM9YQiNBESmS2foLYOC'),
-('Aidan', '$2a$12$xzH1wPZchaHFl3tpYIAJBO5F5Jh6EIDqkQcM9YQiNBESmS2foLYOC'),
-('Evan', '$2a$12$xzH1wPZchaHFl3tpYIAJBO5F5Jh6EIDqkQcM9YQiNBESmS2foLYOC'),
-('Sam', '$2a$12$xzH1wPZchaHFl3tpYIAJBO5F5Jh6EIDqkQcM9YQiNBESmS2foLYOC'),
-('Charis', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('Sheena', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('Ady', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('instructor', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi');
+('Charis', '$2a$12$xzH1wPZchaHFl3tpYIAJBO5F5Jh6EIDqkQcM9YQiNBESmS2foLYOC'),
+('Sheena', '$2a$12$xzH1wPZchaHFl3tpYIAJBO5F5Jh6EIDqkQcM9YQiNBESmS2foLYOC'),
+('Ady', '$2a$12$xzH1wPZchaHFl3tpYIAJBO5F5Jh6EIDqkQcM9YQiNBESmS2foLYOC'),
+('instructor', '$2a$12$xzH1wPZchaHFl3tpYIAJBO5F5Jh6EIDqkQcM9YQiNBESmS2foLYOC');
 
 -- ============================================
 -- POKEMON DATA - ALL LEGENDARIES & MYTHICALS
