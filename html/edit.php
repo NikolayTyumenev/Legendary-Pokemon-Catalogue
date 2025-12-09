@@ -58,7 +58,7 @@ if (is_post_request()) {
     $is_event_exclusive = isset($_POST['is_event_exclusive']) ? 1 : 0;
     $games_available = trim($_POST['games_available'] ?? '');
     
-    // Validation
+    // --- VALIDATION ---
     if (empty($name)) {
         $errors[] = "Name is required";
     }
@@ -94,9 +94,32 @@ if (is_post_request()) {
     if (empty($description)) {
         $errors[] = "Description is required";
     }
-    
+
+    // Normalize optional numeric fields for DB (allow NULL)
+    if ($height_m === '' || $height_m === null) {
+        $height_m = null;
+    } else {
+        $height_m = (float)$height_m;
+    }
+
+    if ($weight_kg === '' || $weight_kg === null) {
+        $weight_kg = null;
+    } else {
+        $weight_kg = (float)$weight_kg;
+    }
+
     // If no errors, update (including image handling)
     if (count($errors) === 0) {
+        // Cast stats to int just to be safe
+        $hp         = (int)$hp;
+        $attack     = (int)$attack;
+        $defense    = (int)$defense;
+        $sp_attack  = (int)$sp_attack;
+        $sp_defense = (int)$sp_defense;
+        $speed      = (int)$speed;
+        $pokedex_number = (int)$pokedex_number;
+        $generation      = (int)$generation;
+
         $base_stat_total = $hp + $attack + $defense + $sp_attack + $sp_defense + $speed;
         
         if (empty($type2)) {
@@ -105,24 +128,26 @@ if (is_post_request()) {
         
         // Keep existing images by default
         $thumbnail_image = $pokemon['thumbnail_image'];
-        $fullsize_image = $pokemon['fullsize_image'];
-        $regular_image = $pokemon['regular_image'];
-        $shiny_image = $pokemon['shiny_image'];
+        $fullsize_image  = $pokemon['fullsize_image'];
+        $regular_image   = $pokemon['regular_image'];
+        $shiny_image     = $pokemon['shiny_image'];
         
         // Check if new image uploaded
         if (isset($_FILES['pokemon_image']) && $_FILES['pokemon_image']['error'] !== UPLOAD_ERR_NO_FILE) {
-            $image_result = process_pokemon_image($_FILES['pokemon_image']);
+            // If your images folder is not inside this /pokemon folder,
+            // you can change the second argument to '../images/pokemon/'.
+            $image_result = process_pokemon_image($_FILES['pokemon_image']); 
             
             if ($image_result['success']) {
-                // Delete old images
-                if ($pokemon['thumbnail_image'] && $pokemon['fullsize_image']) {
+                // Delete old images (if they existed)
+                if (!empty($pokemon['thumbnail_image']) && !empty($pokemon['fullsize_image'])) {
                     delete_pokemon_images($pokemon['thumbnail_image'], $pokemon['fullsize_image']);
                 }
                 
                 // Use new images
                 $thumbnail_image = $image_result['thumbnail'];
-                $fullsize_image = $image_result['fullsize'];
-                $regular_image = $image_result['fullsize'];
+                $fullsize_image  = $image_result['fullsize'];
+                $regular_image   = $image_result['fullsize']; // fullsize used as regular
             } else {
                 $errors[] = "Image upload error: " . $image_result['error'];
             }
@@ -141,23 +166,45 @@ if (is_post_request()) {
                 height_m = ?, weight_kg = ?,
                 is_event_exclusive = ?, games_available = ?
                 WHERE id = ?";
-            
+
             $update_stmt = mysqli_prepare($connection, $update_query);
             
             if ($update_stmt) {
                 $has_alternate_forms = 0;
                 
-                // 29 parameters + 1 for id = 30 total
-                mysqli_stmt_bind_param($update_stmt, "sisssisiiiiiiissssissssssddisi",
-                    $name, $pokedex_number, $type1, $type2, 
-                    $classification, $generation, $region,
-                    $hp, $attack, $defense, $sp_attack, $sp_defense, $speed, 
+                // 30 params total (29 fields + id)
+                mysqli_stmt_bind_param(
+                    $update_stmt,
+                    "sisssisiiiiiiissssissssssddisi",
+                    $name,
+                    $pokedex_number,
+                    $type1,
+                    $type2,
+                    $classification,
+                    $generation,
+                    $region,
+                    $hp,
+                    $attack,
+                    $defense,
+                    $sp_attack,
+                    $sp_defense,
+                    $speed,
                     $base_stat_total,
-                    $regular_image, $thumbnail_image, $fullsize_image, $shiny_image, $has_alternate_forms,
-                    $description, $lore_story, $how_to_obtain,
-                    $legendary_group, $abilities, $signature_move, 
-                    $height_m, $weight_kg,
-                    $is_event_exclusive, $games_available,
+                    $regular_image,
+                    $thumbnail_image,
+                    $fullsize_image,
+                    $shiny_image,
+                    $has_alternate_forms,
+                    $description,
+                    $lore_story,
+                    $how_to_obtain,
+                    $legendary_group,
+                    $abilities,
+                    $signature_move,
+                    $height_m,
+                    $weight_kg,
+                    $is_event_exclusive,
+                    $games_available,
                     $id
                 );
                 
@@ -317,10 +364,14 @@ include('includes/header.php');
         <!-- Current Image -->
         <div class="col-12"><h4 class="mt-3">Current Image</h4></div>
         
-        <?php if ($pokemon['thumbnail_image']): ?>
+        <?php if (!empty($pokemon['thumbnail_image'])): ?>
             <div class="col-12">
                 <img src="images/pokemon/thumbnails/<?php echo h($pokemon['thumbnail_image']); ?>" 
                      alt="Current image" style="max-width: 200px;">
+            </div>
+        <?php else: ?>
+            <div class="col-12 text-muted mb-2">
+                No image currently set for this Pokémon.
             </div>
         <?php endif; ?>
         
