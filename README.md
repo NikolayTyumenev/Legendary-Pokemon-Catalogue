@@ -12,7 +12,7 @@ docker compose up --build
 docker compose ps
 
 # Access the site
-http://localhost:[32770] - Gotta add later.
+  http://localhost:32770/index.php - Home
 ```
 
 ## Project Structure
@@ -46,7 +46,8 @@ legendary-mythical-pokemon-catalogue/
     │   └── footer.php
     └── images/
         └── pokemon/
-```
+```         └──fullsize/
+            └──tumbnails/
 
 ## Database
 
@@ -70,8 +71,8 @@ legendary-mythical-pokemon-catalogue/
 
 ## Access
 
-- **Website**: http://localhost:[32770] - Gotta add later.
-- **phpMyAdmin**: http://localhost:[32769] - Gotta add later.
+- **Website**: http://localhost:32770/index.php - Home
+- **phpMyAdmin**: http://localhost:8081/ - Admin
   - Username: student
   - Password: student
 

@@ -3,9 +3,10 @@ services:
     build: .
     image: php:8.4-apache
     ports:
-      - "0:80"
+      - "32770:80"
     volumes:
-      - ../:/var/www/html
+      - ./html:/var/www/html
+      - ./private:/var/www/private
     environment:
       PHP_DISPLAY_ERRORS: 1
       PHP_ERROR_REPORTING: E_ALL
@@ -15,7 +16,7 @@ services:
   mysql:
     image: mysql:8.0
     ports:
-      - "0:3306"
+      - "3307:3306"
     environment:
       MYSQL_ROOT_PASSWORD: studentpass
       MYSQL_DATABASE: dmit2025
@@ -27,7 +28,7 @@ services:
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     ports:
-      - "0:80"
+      - "8081:80"
     environment:
       PMA_HOST: mysql
       MYSQL_ROOT_PASSWORD: studentpass
