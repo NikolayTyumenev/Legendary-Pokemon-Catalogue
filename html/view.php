@@ -20,116 +20,230 @@ if (!$pokemon) {
     exit;
 }
 
+// Get previous and next Pokemon IDs
+$prev_query = "SELECT id FROM pokemon WHERE pokedex_number < ? ORDER BY pokedex_number DESC LIMIT 1";
+$prev_stmt = mysqli_prepare($connection, $prev_query);
+mysqli_stmt_bind_param($prev_stmt, "i", $pokemon['pokedex_number']);
+mysqli_stmt_execute($prev_stmt);
+$prev_result = mysqli_stmt_get_result($prev_stmt);
+$prev_pokemon = mysqli_fetch_assoc($prev_result);
+mysqli_stmt_close($prev_stmt);
+
+$next_query = "SELECT id FROM pokemon WHERE pokedex_number > ? ORDER BY pokedex_number ASC LIMIT 1";
+$next_stmt = mysqli_prepare($connection, $next_query);
+mysqli_stmt_bind_param($next_stmt, "i", $pokemon['pokedex_number']);
+mysqli_stmt_execute($next_stmt);
+$next_result = mysqli_stmt_get_result($next_stmt);
+$next_pokemon = mysqli_fetch_assoc($next_result);
+mysqli_stmt_close($next_stmt);
+
 $page_title = $pokemon['name'] . " - Pokemon Details";
 include('includes/header.php');
 ?>
 
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index.php">Home</a></li>
-        <li class="breadcrumb-item"><a href="browse.php">Browse</a></li>
-        <li class="breadcrumb-item active"><?php echo h($pokemon['name']); ?></li>
-    </ol>
-</nav>
-
-<div class="row">
-    <div class="col-md-4">
-        <?php if ($pokemon['fullsize_image']): ?>
-            <img src="images/pokemon/fullsize/<?php echo h($pokemon['fullsize_image']); ?>" 
-                 class="img-fluid rounded shadow" 
-                 alt="<?php echo h($pokemon['name']); ?>">
-        <?php else: ?>
-            <div class="bg-light rounded p-5 text-center">
-                <span class="text-muted">No Image Available</span>
+<div class="pokemon-detail-container">
+    <div class="row">
+        <!-- Left Column - Image & Gallery -->
+        <div class="col-lg-6">
+            <!-- Pokemon Badge & Name -->
+            <div class="pokemon-badge">#<?php echo str_pad($pokemon['pokedex_number'], 4, '0', STR_PAD_LEFT); ?></div>
+            <h1 class="pokemon-name-title"><?php echo h($pokemon['name']); ?></h1>
+            
+            <!-- Description -->
+            <p class="pokemon-description">
+                <?php echo nl2br(h($pokemon['description'])); ?>
+            </p>
+            
+            <!-- Main Pokemon Image with Type-Based Gradient -->
+            <div class="pokemon-main-image main-image-<?php echo strtolower($pokemon['type1']); ?>">
+                <?php if ($pokemon['fullsize_image']): ?>
+                    <img src="images/pokemon/fullsize/<?php echo h($pokemon['fullsize_image']); ?>" 
+                         alt="<?php echo h($pokemon['name']); ?>">
+                <?php else: ?>
+                    <div class="text-muted py-5">No Image Available</div>
+                <?php endif; ?>
             </div>
-        <?php endif; ?>
-    </div>
-    
-    <div class="col-md-8">
-        <h1><?php echo h($pokemon['name']); ?> 
-            <span class="text-muted">#<?php echo h($pokemon['pokedex_number']); ?></span>
-        </h1>
-        
-        <p class="lead">
-            <span class="badge bg-primary"><?php echo h($pokemon['type1']); ?></span>
-            <?php if ($pokemon['type2']): ?>
-                <span class="badge bg-secondary"><?php echo h($pokemon['type2']); ?></span>
+            
+            <!-- Image Gallery Thumbnails - Placeholder for Milestone 3 -->
+            <?php if ($pokemon['shiny_image'] || $pokemon['has_alternate_forms']): ?>
+                <div class="image-gallery">
+                    <div class="gallery-thumb active gallery-thumb-<?php echo strtolower($pokemon['type1']); ?>">
+                        <img src="images/pokemon/thumbnails/<?php echo h($pokemon['thumbnail_image']); ?>" 
+                             alt="Regular">
+                    </div>
+                    <?php if ($pokemon['shiny_image']): ?>
+                        <div class="gallery-thumb gallery-thumb-<?php echo strtolower($pokemon['type1']); ?>">
+                            <img src="images/pokemon/thumbnails/<?php echo h($pokemon['shiny_image']); ?>" 
+                                 alt="Shiny Form">
+                        </div>
+                    <?php endif; ?>
+                </div>
             <?php endif; ?>
-            <span class="badge bg-info"><?php echo h($pokemon['classification']); ?></span>
-        </p>
-        
-        <div class="card mb-3">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Base Stats</h5>
-            </div>
-            <div class="card-body">
-                <table class="table table-sm mb-0">
-                    <tr><th width="40%">HP</th><td><?php echo h($pokemon['hp']); ?></td></tr>
-                    <tr><th>Attack</th><td><?php echo h($pokemon['attack']); ?></td></tr>
-                    <tr><th>Defense</th><td><?php echo h($pokemon['defense']); ?></td></tr>
-                    <tr><th>Sp. Attack</th><td><?php echo h($pokemon['sp_attack']); ?></td></tr>
-                    <tr><th>Sp. Defense</th><td><?php echo h($pokemon['sp_defense']); ?></td></tr>
-                    <tr><th>Speed</th><td><?php echo h($pokemon['speed']); ?></td></tr>
-                    <tr class="table-primary"><th><strong>Total</strong></th><td><strong><?php echo h($pokemon['base_stat_total']); ?></strong></td></tr>
-                </table>
-            </div>
         </div>
         
-        <div class="card mb-3">
-            <div class="card-header">Description</div>
-            <div class="card-body">
-                <p><?php echo nl2br(h($pokemon['description'])); ?></p>
-                
-                <?php if ($pokemon['lore_story']): ?>
-                    <h6>Lore & Story</h6>
+        <!-- Right Column - Stats & Info -->
+        <div class="col-lg-6">
+            <!-- Type Badges -->
+            <div class="mb-4">
+                <h5 class="stats-section"><i class="bi bi-tag-fill"></i> TYPE</h5>
+                <span class="type-badge-large type-<?php echo strtolower($pokemon['type1']); ?>">
+                    <?php echo h($pokemon['type1']); ?>
+                </span>
+                <?php if ($pokemon['type2']): ?>
+                    <span class="type-badge-large type-<?php echo strtolower($pokemon['type2']); ?>">
+                        <?php echo h($pokemon['type2']); ?>
+                    </span>
+                <?php endif; ?>
+            </div>
+            
+            <!-- Base Stats -->
+            <div class="stats-section mb-4">
+                <h5><i class="bi bi-bar-chart-fill"></i> BASE STATS</h5>
+                <div class="stat-item">
+                    <span class="stat-label">HP</span>
+                    <span class="stat-value"><?php echo h($pokemon['hp']); ?></span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Attack</span>
+                    <span class="stat-value"><?php echo h($pokemon['attack']); ?></span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Defense</span>
+                    <span class="stat-value"><?php echo h($pokemon['defense']); ?></span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Sp. Attack</span>
+                    <span class="stat-value"><?php echo h($pokemon['sp_attack']); ?></span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Sp. Defense</span>
+                    <span class="stat-value"><?php echo h($pokemon['sp_defense']); ?></span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Speed</span>
+                    <span class="stat-value"><?php echo h($pokemon['speed']); ?></span>
+                </div>
+                <div class="stat-item" style="border-top: 2px solid #667eea; margin-top: 10px; padding-top: 15px;">
+                    <span class="stat-label"><strong>TOTAL</strong></span>
+                    <span class="stat-value" style="color: #667eea;"><?php echo h($pokemon['base_stat_total']); ?></span>
+                </div>
+            </div>
+            
+            <!-- Additional Info -->
+            <?php if ($pokemon['lore_story']): ?>
+                <div class="info-card">
+                    <h6><i class="bi bi-book-fill"></i> Lore & Story</h6>
                     <p><?php echo nl2br(h($pokemon['lore_story'])); ?></p>
-                <?php endif; ?>
-                
-                <?php if ($pokemon['how_to_obtain']): ?>
-                    <h6>How to Obtain</h6>
+                </div>
+            <?php endif; ?>
+            
+            <?php if ($pokemon['how_to_obtain']): ?>
+                <div class="info-card">
+                    <h6><i class="bi bi-geo-alt-fill"></i> How to Obtain</h6>
                     <p><?php echo nl2br(h($pokemon['how_to_obtain'])); ?></p>
-                <?php endif; ?>
-            </div>
-        </div>
-        
-        <div class="card mb-3">
-            <div class="card-header">Additional Information</div>
-            <div class="card-body">
+                </div>
+            <?php endif; ?>
+            
+            <!-- Pokemon Details -->
+            <div class="info-card">
+                <h6><i class="bi bi-info-circle-fill"></i> Details</h6>
                 <table class="table table-sm mb-0">
-                    <tr><th width="40%">Generation</th><td><?php echo h($pokemon['generation']); ?></td></tr>
-                    <tr><th>Region</th><td><?php echo h($pokemon['region']); ?></td></tr>
+                    <tr>
+                        <td><strong>Classification:</strong></td>
+                        <td><?php echo h($pokemon['classification']); ?></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Generation:</strong></td>
+                        <td><?php echo h($pokemon['generation']); ?></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Region:</strong></td>
+                        <td><?php echo h($pokemon['region']); ?></td>
+                    </tr>
                     <?php if ($pokemon['legendary_group']): ?>
-                        <tr><th>Group</th><td><?php echo h($pokemon['legendary_group']); ?></td></tr>
+                        <tr>
+                            <td><strong>Group:</strong></td>
+                            <td><?php echo h($pokemon['legendary_group']); ?></td>
+                        </tr>
                     <?php endif; ?>
                     <?php if ($pokemon['abilities']): ?>
-                        <tr><th>Abilities</th><td><?php echo h($pokemon['abilities']); ?></td></tr>
+                        <tr>
+                            <td><strong>Abilities:</strong></td>
+                            <td><?php echo h($pokemon['abilities']); ?></td>
+                        </tr>
                     <?php endif; ?>
                     <?php if ($pokemon['signature_move']): ?>
-                        <tr><th>Signature Move</th><td><?php echo h($pokemon['signature_move']); ?></td></tr>
+                        <tr>
+                            <td><strong>Signature Move:</strong></td>
+                            <td><?php echo h($pokemon['signature_move']); ?></td>
+                        </tr>
                     <?php endif; ?>
                     <?php if ($pokemon['height_m']): ?>
-                        <tr><th>Height</th><td><?php echo h($pokemon['height_m']); ?>m</td></tr>
+                        <tr>
+                            <td><strong>Height:</strong></td>
+                            <td><?php echo h($pokemon['height_m']); ?> m</td>
+                        </tr>
                     <?php endif; ?>
                     <?php if ($pokemon['weight_kg']): ?>
-                        <tr><th>Weight</th><td><?php echo h($pokemon['weight_kg']); ?>kg</td></tr>
+                        <tr>
+                            <td><strong>Weight:</strong></td>
+                            <td><?php echo h($pokemon['weight_kg']); ?> kg</td>
+                        </tr>
+                    <?php endif; ?>
+                    <?php if ($pokemon['is_event_exclusive']): ?>
+                        <tr>
+                            <td><strong>Availability:</strong></td>
+                            <td><span class="badge bg-danger">Event Exclusive</span></td>
+                        </tr>
+                    <?php endif; ?>
+                    <?php if ($pokemon['games_available']): ?>
+                        <tr>
+                            <td><strong>Games:</strong></td>
+                            <td><?php echo h($pokemon['games_available']); ?></td>
+                        </tr>
                     <?php endif; ?>
                 </table>
             </div>
-        </div>
-        
-        <div class="btn-group" role="group">
+            
+            <!-- Admin Actions -->
             <?php if (is_logged_in()): ?>
-                <a href="edit.php?id=<?php echo $pokemon['id']; ?>" class="btn btn-warning">
-                    <i class="bi bi-pencil"></i> Edit
-                </a>
-                <a href="delete.php?id=<?php echo $pokemon['id']; ?>" class="btn btn-danger">
-                    <i class="bi bi-trash"></i> Delete
-                </a>
+                <div class="admin-actions mt-4">
+                    <h6><i class="bi bi-shield-lock-fill"></i> Admin Actions</h6>
+                    <a href="edit.php?id=<?php echo $pokemon['id']; ?>" class="btn btn-warning">
+                        <i class="bi bi-pencil"></i> Edit Pokemon
+                    </a>
+                    <a href="delete.php?id=<?php echo $pokemon['id']; ?>" class="btn btn-danger">
+                        <i class="bi bi-trash"></i> Delete Pokemon
+                    </a>
+                </div>
             <?php endif; ?>
-            <a href="browse.php" class="btn btn-secondary">
-                <i class="bi bi-arrow-left"></i> Back to Browse
-            </a>
         </div>
+    </div>
+    
+    <!-- Navigation -->
+    <div class="pokemon-nav">
+        <?php if ($prev_pokemon): ?>
+            <a href="view.php?id=<?php echo $prev_pokemon['id']; ?>" class="nav-button prev">
+                <i class="bi bi-arrow-left-circle-fill"></i>
+                <span>Previous</span>
+            </a>
+        <?php else: ?>
+            <div></div>
+        <?php endif; ?>
+        
+        <a href="browse.php" class="nav-button">
+            <i class="bi bi-grid-fill"></i>
+            <span>Back to Browse</span>
+        </a>
+        
+        <?php if ($next_pokemon): ?>
+            <a href="view.php?id=<?php echo $next_pokemon['id']; ?>" class="nav-button next">
+                <span>Next</span>
+                <i class="bi bi-arrow-right-circle-fill"></i>
+            </a>
+        <?php else: ?>
+            <div></div>
+        <?php endif; ?>
     </div>
 </div>
 

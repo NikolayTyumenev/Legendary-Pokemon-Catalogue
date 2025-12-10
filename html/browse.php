@@ -8,9 +8,13 @@ $page_title = "Browse Pokemon";
 include('includes/header.php');
 ?>
 
-<h1>Browse Pokemon Catalogue</h1>
-<p class="lead">All Legendary & Mythical Pokemon</p>
+<!-- Hero Banner -->
+<div class="hero-banner">
+    <h1>Discover Pokémon</h1>
+    <p class="lead">Explore the complete catalogue of Legendary & Mythical Pokémon</p>
+</div>
 
+<!-- Pokemon Grid -->
 <div class="row g-4">
     <?php
     $query = "SELECT id, name, pokedex_number, type1, type2, classification, generation, thumbnail_image 
@@ -21,44 +25,40 @@ include('includes/header.php');
     while ($row = mysqli_fetch_assoc($result)):
     ?>
     
-    <div class="col-lg-3 col-md-4 col-sm-6">
-        <div class="card h-100 shadow-sm">
-            <?php if ($row['thumbnail_image']): ?>
-                <img src="images/pokemon/thumbnails/<?php echo htmlspecialchars($row['thumbnail_image']); ?>" 
-                     class="card-img-top" 
-                     alt="<?php echo htmlspecialchars($row['name']); ?>"
-                     style="height: 200px; object-fit: contain; padding: 10px;">
-            <?php else: ?>
-                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
-                     style="height: 200px;">
-                    <span class="text-muted">No Image</span>
-                </div>
-            <?php endif; ?>
+    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+        <a href="view.php?id=<?php echo $row['id']; ?>" class="pokemon-card">
+            <!-- Circular Image with Type-Based Gradient -->
+            <div class="pokemon-image-circle circle-<?php echo strtolower($row['type1']); ?>">
+                <?php if ($row['thumbnail_image']): ?>
+                    <img src="images/pokemon/thumbnails/<?php echo htmlspecialchars($row['thumbnail_image']); ?>" 
+                         alt="<?php echo htmlspecialchars($row['name']); ?>">
+                <?php else: ?>
+                    <span class="text-muted">?</span>
+                <?php endif; ?>
+            </div>
             
-            <div class="card-body">
-                <h5 class="card-title">
-                    <?php echo htmlspecialchars($row['name']); ?> 
-                    <small class="text-muted">#<?php echo htmlspecialchars($row['pokedex_number']); ?></small>
-                </h5>
-                <p class="card-text">
-                    <span class="badge bg-primary"><?php echo htmlspecialchars($row['type1']); ?></span>
-                    <?php if ($row['type2']): ?>
-                        <span class="badge bg-secondary"><?php echo htmlspecialchars($row['type2']); ?></span>
-                    <?php endif; ?>
-                </p>
-                <p class="card-text">
-                    <small class="text-muted">
-                        <?php echo htmlspecialchars($row['classification']); ?> | 
-                        Gen <?php echo htmlspecialchars($row['generation']); ?>
-                    </small>
-                </p>
+            <!-- Pokemon Name -->
+            <div class="pokemon-card-title"><?php echo htmlspecialchars($row['name']); ?></div>
+            
+            <!-- Pokedex Number -->
+            <div class="pokemon-number">
+                #<?php echo str_pad($row['pokedex_number'], 3, '0', STR_PAD_LEFT); ?>
             </div>
-            <div class="card-footer">
-                <a href="view.php?id=<?php echo $row['id']; ?>" class="btn btn-primary btn-sm w-100">
-                    <i class="bi bi-eye"></i> View Details
-                </a>
+            
+            <!-- Type Badges (Circles) -->
+            <div class="type-badges">
+                <div class="type-badge-circle type-<?php echo strtolower($row['type1']); ?>" 
+                     title="<?php echo htmlspecialchars($row['type1']); ?>">
+                    <?php echo strtoupper(substr($row['type1'], 0, 1)); ?>
+                </div>
+                <?php if ($row['type2']): ?>
+                    <div class="type-badge-circle type-<?php echo strtolower($row['type2']); ?>"
+                         title="<?php echo htmlspecialchars($row['type2']); ?>">
+                        <?php echo strtoupper(substr($row['type2'], 0, 1)); ?>
+                    </div>
+                <?php endif; ?>
             </div>
-        </div>
+        </a>
     </div>
     
     <?php endwhile; ?>

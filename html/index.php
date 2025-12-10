@@ -10,8 +10,8 @@ include('includes/header.php');
 
 <div class="row">
     <div class="col-lg-12">
-        <div class="jumbotron bg-light p-5 rounded">
-            <h1 class="display-4">Welcome to the Legendary & Mythical Pokemon Catalogue</h1>
+        <div class="hero-banner">
+            <h1 class="display-4">Welcome to the Legendary & Mythical Pokémon Catalogue</h1>
             <p class="lead">
                 Explore the rarest and most powerful Pokemon from all 9 generations. 
                 Browse through 95 Legendary and Mythical Pokemon, build your ultimate team, 
@@ -21,10 +21,10 @@ include('includes/header.php');
             <p>
                 Get started by browsing the catalogue or building your perfect team!
             </p>
-            <a class="btn btn-primary btn-lg" href="browse.php" role="button">
+            <a class="btn btn-light btn-lg" href="browse.php" role="button">
                 <i class="bi bi-grid-fill"></i> Browse Catalogue
             </a>
-            <a class="btn btn-success btn-lg" href="team_builder.php" role="button">
+            <a class="btn btn-outline-light btn-lg" href="team_builder.php" role="button">
                 <i class="bi bi-people-fill"></i> Team Builder
             </a>
         </div>
