@@ -20,7 +20,7 @@ include('includes/header.php');
         <div class="alert alert-info">
             <i class="bi bi-info-circle"></i> Your team is empty. Add Pokemon from the list below.
         </div>
-        <!-- TODO: Display selected Pokemon - FOR PART 3! we are not done yet -->
+        <!-- Team display will be implemented in Milestone 3 -->
     </div>
 </div>
 
@@ -82,7 +82,7 @@ include('includes/header.php');
     </div>
     <div class="card-body">
         <div class="row g-3">
-            <!-- TODO: Display all Pokemon with "Add to Team" buttons - FOR PART 3! we are not done yet -->
+            <!-- Pokemon selection will be implemented in Milestone 3 -->
             <p>Load Pokemon from database</p>
         </div>
     </div>

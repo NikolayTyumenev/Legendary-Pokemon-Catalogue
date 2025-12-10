@@ -161,11 +161,12 @@ if (is_post_request()) {
                 if (mysqli_stmt_execute($stmt)) {
                     $inserted_id = mysqli_insert_id($connection);
                     mysqli_stmt_close($stmt);
+                    
+                    set_success_message("Pokemon '{$name}' added successfully!");
+                    
                     db_disconnect($connection);
                     header("Location: view.php?id=" . $inserted_id);
                     exit;
-                } else {
-                    $errors[] = "Database error: " . mysqli_stmt_error($stmt);
                 }
 
                 mysqli_stmt_close($stmt);

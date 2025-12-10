@@ -210,6 +210,9 @@ if (is_post_request()) {
                 
                 if (mysqli_stmt_execute($update_stmt)) {
                     mysqli_stmt_close($update_stmt);
+                    
+                    set_success_message("Pokemon '{$name}' updated successfully!");
+                    
                     db_disconnect($connection);
                     header("Location: view.php?id=" . $id);
                     exit;

@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     
     if (attempt_login($connection, $username, $password)) {
+        set_success_message("Welcome back, {$username}!");
         header('Location: admin.php');
         exit;
     } else {
@@ -61,7 +62,7 @@ include('includes/header.php');
                 
                 <div class="alert alert-info mb-0">
                     <small>
-                        <strong>Disclaimer:</strong> I sent it to everyone on Teams.
+                        <strong>Admin Access:</strong> Use your assigned credentials to access the admin panel.
                     </small>
                 </div>
             </div>

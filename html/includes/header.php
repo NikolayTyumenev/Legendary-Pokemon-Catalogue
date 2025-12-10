@@ -72,3 +72,9 @@
 
     <!-- Main Content Container -->
     <div class="container my-4">
+        
+        <?php 
+        if (function_exists('display_success_message')) {
+            echo display_success_message(); 
+        }
+        ?>

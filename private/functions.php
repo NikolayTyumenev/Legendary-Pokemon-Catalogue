@@ -108,29 +108,35 @@ function process_pokemon_image($file, $target_dir = 'images/pokemon/') {
     
     // Create thumbnail
     $thumbnail_image = imagecreatetruecolor($thumb_width, $thumb_height);
-    
+
+    // Preserve transparency for PNG/GIF
     if ($mime_type === 'image/png' || $mime_type === 'image/gif') {
         imagealphablending($thumbnail_image, false);
         imagesavealpha($thumbnail_image, true);
+        $transparent = imagecolorallocatealpha($thumbnail_image, 0, 0, 0, 127);
+        imagefill($thumbnail_image, 0, 0, $transparent);
     }
-    
+
     imagecopyresampled($thumbnail_image, $source_image, 
-                       0, 0, 0, 0, 
-                       $thumb_width, $thumb_height, 
-                       $orig_width, $orig_height);
+                    0, 0, 0, 0, 
+                    $thumb_width, $thumb_height, 
+                    $orig_width, $orig_height);
     
     // Create full-size
     $fullsize_image = imagecreatetruecolor($full_width, $full_height);
-    
+
+    // Preserve transparency for PNG/GIF
     if ($mime_type === 'image/png' || $mime_type === 'image/gif') {
         imagealphablending($fullsize_image, false);
         imagesavealpha($fullsize_image, true);
+        $transparent = imagecolorallocatealpha($fullsize_image, 0, 0, 0, 127);
+        imagefill($fullsize_image, 0, 0, $transparent);
     }
-    
+
     imagecopyresampled($fullsize_image, $source_image,
-                       0, 0, 0, 0,
-                       $full_width, $full_height,
-                       $orig_width, $orig_height);
+                    0, 0, 0, 0,
+                    $full_width, $full_height,
+                    $orig_width, $orig_height);
     
     // Save images
     $thumb_success = false;
@@ -180,5 +186,21 @@ function delete_pokemon_images($thumbnail_filename, $fullsize_filename, $target_
     if (file_exists($fullsize_path)) {
         unlink($fullsize_path);
     }
+}
+
+function set_success_message($message) {
+    $_SESSION['success_message'] = $message;
+}
+
+function display_success_message() {
+    if (isset($_SESSION['success_message'])) {
+        $message = $_SESSION['success_message'];
+        unset($_SESSION['success_message']);
+        return '<div class="alert alert-success alert-dismissible fade show" role="alert">'
+             . h($message) 
+             . '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>'
+             . '</div>';
+    }
+    return '';
 }
 ?>

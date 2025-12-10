@@ -35,6 +35,8 @@ if ($id > 0) {
     }
 }
 
+set_success_message("Pokemon deleted successfully!");
+
 db_disconnect($connection);
 header('Location: browse.php');
 exit;
