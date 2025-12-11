@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Dec 09, 2025 at 11:15 PM
+-- Generation Time: Dec 11, 2025 at 10:57 AM
 -- Server version: 8.0.43
 -- PHP Version: 8.2.27
 
@@ -91,7 +91,7 @@ CREATE TABLE `pokemon` (
 --
 
 INSERT INTO `pokemon` (`id`, `name`, `pokedex_number`, `type1`, `type2`, `classification`, `generation`, `region`, `hp`, `attack`, `defense`, `sp_attack`, `sp_defense`, `speed`, `base_stat_total`, `regular_image`, `thumbnail_image`, `fullsize_image`, `shiny_image`, `has_alternate_forms`, `description`, `lore_story`, `how_to_obtain`, `legendary_group`, `abilities`, `signature_move`, `height_m`, `weight_kg`, `is_event_exclusive`, `games_available`, `created_at`, `updated_at`) VALUES
-(1, 'Articuno', 144, 'Ice', 'Flying', 'Legendary', 1, 'Kanto', 90, 85, 100, 95, 125, 85, 580, 'Articuno.png', 'Articuno.png', 'Articuno.png', '', 0, 'A legendary bird Pokemon that is said to appear to doomed people who are lost in icy mountains.', 'Articuno is said to live in icy mountains and appears to travelers lost in snow.', 'Seafoam Islands after 8 badges', 'Legendary Birds', 'Pressure, Snow Cloak', 'Freeze-Dry', 1.70, 55.4, 0, 'RBY, GSC, FRLG, HGSS, XY, LGPE, SwSh', '2025-12-09 01:32:44', '2025-12-09 20:17:25'),
+(1, 'Articuno', 144, 'Ice', 'Flying', 'Legendary', 1, 'Kanto', 90, 85, 100, 95, 125, 85, 580, 'Articuno.png', 'Articuno.png', 'Articuno.png', 'articuno_shiny.png', 0, 'A legendary bird Pokemon that is said to appear to doomed people who are lost in icy mountains.', 'Articuno is said to live in icy mountains and appears to travelers lost in snow.', 'Seafoam Islands after 8 badges', 'Legendary Birds', 'Pressure, Snow Cloak', 'Freeze-Dry', 1.70, 55.4, 0, 'RBY, GSC, FRLG, HGSS, XY, LGPE, SwSh', '2025-12-09 01:32:44', '2025-12-11 10:47:05'),
 (2, 'Zapdos', 145, 'Electric', 'Flying', 'Legendary', 1, 'Kanto', 90, 90, 85, 125, 90, 100, 580, 'Zapdos.png', 'Zapdos.png', 'Zapdos.png', NULL, 0, 'A legendary bird Pokemon that is said to appear from clouds while dropping enormous lightning bolts.', 'Zapdos nests in thunderclouds and gains power from lightning strikes.', 'Power Plant in Kanto', 'Legendary Birds', 'Pressure, Static', 'Thunder Shock', 1.60, 52.6, 0, 'RBY, GSC, FRLG, HGSS, XY, LGPE, SwSh', '2025-12-09 01:32:44', '2025-12-09 20:17:25'),
 (3, 'Moltres', 146, 'Fire', 'Flying', 'Legendary', 1, 'Kanto', 90, 100, 90, 125, 85, 90, 580, 'Moltres.png', 'Moltres.png', 'Moltres.png', NULL, 0, 'A legendary bird Pokemon that is said to bring early spring to the wintry lands it visits.', 'Moltres migrates from the south bringing spring. Heals in volcanoes.', 'Victory Road after 8 badges', 'Legendary Birds', 'Pressure, Flame Body', 'Heat Wave', 2.00, 60.0, 0, 'RBY, GSC, FRLG, HGSS, XY, LGPE, SwSh', '2025-12-09 01:32:44', '2025-12-09 20:17:25'),
 (4, 'Mewtwo', 150, 'Psychic', NULL, 'Legendary', 1, 'Kanto', 106, 110, 90, 154, 90, 130, 680, 'Mewtwo.png', 'Mewtwo.png', 'Mewtwo.png', NULL, 1, 'Created by scientists through genetic manipulation from Mew DNA.', 'Mewtwo was created to be the ultimate battle Pokemon through gene splicing.', 'Cerulean Cave post-Elite Four', NULL, 'Pressure, Unnerve', 'Psystrike', 2.00, 122.0, 0, 'RBY, GSC, FRLG, HGSS, XY, LGPE, SwSh', '2025-12-09 01:32:44', '2025-12-09 20:35:26'),

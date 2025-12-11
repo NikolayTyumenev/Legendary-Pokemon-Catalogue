@@ -1,11 +1,11 @@
 <?php
 require_once('../private/connect.php');
-require_once('../private/authentication.php');
 require_once('../private/functions.php');
 
 $connection = db_connect();
 
 $id = $_GET['id'] ?? 0;
+$show_shiny = $_GET['shiny'] ?? 0; // Check if shiny version should be shown
 
 $query = "SELECT * FROM pokemon WHERE id = ? LIMIT 1";
 $stmt = mysqli_prepare($connection, $query);
@@ -34,8 +34,15 @@ include('includes/header.php');
 
 <div class="row">
     <div class="col-md-4">
-        <?php if ($pokemon['fullsize_image']): ?>
-            <img src="images/pokemon/fullsize/<?php echo h($pokemon['fullsize_image']); ?>" 
+        <?php 
+        // Determine which image to show
+        $current_image = $show_shiny && $pokemon['shiny_image'] 
+            ? $pokemon['shiny_image'] 
+            : $pokemon['fullsize_image'];
+        ?>
+        
+        <?php if ($current_image): ?>
+            <img src="images/pokemon/fullsize/<?php echo h($current_image); ?>" 
                  class="img-fluid rounded shadow" 
                  alt="<?php echo h($pokemon['name']); ?>">
         <?php else: ?>
@@ -43,11 +50,54 @@ include('includes/header.php');
                 <span class="text-muted">No Image Available</span>
             </div>
         <?php endif; ?>
+        
+        <!-- Shiny Toggle -->
+        <?php if ($pokemon['shiny_image']): ?>
+            <div class="card mt-2">
+                <div class="card-body p-2 text-center">
+                    <?php if ($show_shiny): ?>
+                        <a href="view.php?id=<?php echo $pokemon['id']; ?>" class="btn btn-sm btn-secondary w-100">
+                            ✨ Show Normal Version
+                        </a>
+                    <?php else: ?>
+                        <a href="view.php?id=<?php echo $pokemon['id']; ?>&shiny=1" class="btn btn-sm btn-warning w-100">
+                            ⭐ Show Shiny Version
+                        </a>
+                    <?php endif; ?>
+                </div>
+            </div>
+        <?php endif; ?>
+        
+        <!-- Team Builder Button -->
+        <div class="card mt-2">
+            <div class="card-body p-2">
+                <form method="post" action="team_builder.php">
+                    <input type="hidden" name="pokemon_id" value="<?php echo $pokemon['id']; ?>">
+                    <?php if (count($_SESSION['team']) < 6 && !in_array($pokemon['id'], $_SESSION['team'])): ?>
+                        <button type="submit" name="add_to_team" class="btn btn-success w-100">
+                            ➕ Add to Team
+                        </button>
+                    <?php elseif (in_array($pokemon['id'], $_SESSION['team'])): ?>
+                        <button type="submit" name="remove_from_team" class="btn btn-danger w-100">
+                            ➖ Remove from Team
+                        </button>
+                    <?php else: ?>
+                        <button type="button" class="btn btn-secondary w-100" disabled>
+                            Team Full (6/6)
+                        </button>
+                    <?php endif; ?>
+                </form>
+            </div>
+        </div>
     </div>
     
     <div class="col-md-8">
-        <h1><?php echo h($pokemon['name']); ?> 
+        <h1>
+            <?php echo h($pokemon['name']); ?> 
             <span class="text-muted">#<?php echo h($pokemon['pokedex_number']); ?></span>
+            <?php if ($show_shiny): ?>
+                <span class="badge bg-warning">⭐ Shiny</span>
+            <?php endif; ?>
         </h1>
         
         <p class="lead">
@@ -120,14 +170,14 @@ include('includes/header.php');
         <div class="btn-group" role="group">
             <?php if (is_logged_in()): ?>
                 <a href="edit.php?id=<?php echo $pokemon['id']; ?>" class="btn btn-warning">
-                    <i class="bi bi-pencil"></i> Edit
+                    Edit
                 </a>
                 <a href="delete.php?id=<?php echo $pokemon['id']; ?>" class="btn btn-danger">
-                    <i class="bi bi-trash"></i> Delete
+                    Delete
                 </a>
             <?php endif; ?>
             <a href="browse.php" class="btn btn-secondary">
-                <i class="bi bi-arrow-left"></i> Back to Browse
+                Back to Browse
             </a>
         </div>
     </div>

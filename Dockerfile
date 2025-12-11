@@ -25,6 +25,10 @@ RUN apt-get update && \
       mysqli \
     && rm -rf /var/lib/apt/lists/*
 
+# Create session directory with proper permissions - Team builder breaking without this
+RUN mkdir -p /var/lib/php/sessions && \
+    chmod 777 /var/lib/php/sessions
+
 # Enable mod_rewrite
 RUN a2enmod rewrite
 
