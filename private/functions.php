@@ -203,4 +203,20 @@ function display_success_message() {
     }
     return '';
 }
+
+function set_error_message($message) {
+    $_SESSION['error_message'] = $message;
+}
+
+function display_error_message() {
+    if (isset($_SESSION['error_message'])) {
+        $message = $_SESSION['error_message'];
+        unset($_SESSION['error_message']);
+        return '<div class="alert alert-danger alert-dismissible fade show" role="alert">'
+             . h($message) 
+             . '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>'
+             . '</div>';
+    }
+    return '';
+}
 ?>

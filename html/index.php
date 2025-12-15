@@ -1,4 +1,5 @@
 <?php
+session_start();
 $page_title = "Home - Pokemon Catalogue";
 include('includes/header.php');
 ?>
