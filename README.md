@@ -28,7 +28,7 @@ A comprehensive web-based catalogue featuring 101 Legendary and Mythical Pokemon
 ## Quick Start
 ```bash
 # Clone the repository
-git clone <your-repo-url>
+git clone <https://github.com/NikolayTyumenev/Legendary-Pokemon-Catalogue>
 cd legendary-pokemon-catalogue
 
 # Build and start containers
