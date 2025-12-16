@@ -1,7 +1,7 @@
 <?php
-// Prepared statement functions - already included where needed so can leave empty
+// Prepared statement functions - already included where needed so can leave empty here
 
-// TODO: Implement prepared statement helpers
+// - Implement prepared statement helpers
 // - find_pokemon_by_id($connection, $id)
 // - find_all_pokemon($connection)
 // - insert_pokemon($connection, $data)

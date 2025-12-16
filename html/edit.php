@@ -25,9 +25,9 @@ if (!$pokemon) {
     exit;
 }
 
-// submission form handling
+// submission form handling 
 if (is_post_request()) {
-    // Get form data
+    // Get form data from sql
     $name = trim($_POST['name'] ?? '');
     $pokedex_number = $_POST['pokedex_number'] ?? '';
     $type1 = $_POST['type1'] ?? '';
@@ -95,7 +95,6 @@ if (is_post_request()) {
         $errors[] = "Description is required";
     }
 
-    // Normalize optional numeric fields for DB (allow NULL)
     if ($height_m === '' || $height_m === null) {
         $height_m = null;
     } else {
@@ -133,18 +132,16 @@ if (is_post_request()) {
         $shiny_image     = $pokemon['shiny_image'];
         
         // Check if new image uploaded
-        if (isset($_FILES['pokemon_image']) && $_FILES['pokemon_image']['error'] !== UPLOAD_ERR_NO_FILE) {
-            // If your images folder is not inside this /pokemon folder,
-            // you can change the second argument to '../images/pokemon/'.
+        if (isset($_FILES['pokemon_image']) && $_FILES['pokemon_image']['error'] !== UPLOAD_ERR_NO_FILE) { 
             $image_result = process_pokemon_image($_FILES['pokemon_image']); 
             
             if ($image_result['success']) {
-                // Delete old images (if they existed)
+                // Delete old images 
                 if (!empty($pokemon['thumbnail_image']) && !empty($pokemon['fullsize_image'])) {
                     delete_pokemon_images($pokemon['thumbnail_image'], $pokemon['fullsize_image']);
                 }
                 
-                // Use new images
+                // Use new images 
                 $thumbnail_image = $image_result['thumbnail'];
                 $fullsize_image  = $image_result['fullsize'];
                 $regular_image   = $image_result['fullsize']; // fullsize used as regular
@@ -153,7 +150,7 @@ if (is_post_request()) {
             }
         }
         
-        // If still no errors, update database
+        // If still no errors, update database 
         if (count($errors) === 0) {
             $update_query = "UPDATE pokemon SET 
                 name = ?, pokedex_number = ?, type1 = ?, type2 = ?, 
@@ -172,7 +169,7 @@ if (is_post_request()) {
             if ($update_stmt) {
                 $has_alternate_forms = 0;
                 
-                // 30 params total (29 fields + id)
+                // 30 params total (29 fields + id) type string has 30 characters
                 mysqli_stmt_bind_param(
                     $update_stmt,
                     "sisssisiiiiiiissssissssssddisi",
@@ -227,7 +224,7 @@ if (is_post_request()) {
         }
     }
     
-    // If errors, update $pokemon with POST data for form
+    // If errors, update $pokemon with POST data for form repopulation
     if (count($errors) > 0) {
         $pokemon = array_merge($pokemon, $_POST);
     }

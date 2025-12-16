@@ -5,7 +5,7 @@ require_once('../private/functions.php');
 
 $connection = db_connect();
 
-// Get filter values from GET
+// Get filter values from SQL
 $search = $_GET['search'] ?? '';
 $type_filter = $_GET['type'] ?? '';
 $generation_filter = $_GET['generation'] ?? '';
@@ -16,7 +16,7 @@ $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $per_page = 12;
 $offset = ($page - 1) * $per_page;
 
-// Build WHERE clause
+// Build WHERE
 $where_conditions = [];
 $params = [];
 $types = '';

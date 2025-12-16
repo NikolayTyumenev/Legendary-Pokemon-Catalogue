@@ -9,11 +9,11 @@ require_login();
 $connection = db_connect();
 
 $errors = [];
-$success_message = '';
+$success_message = ''; 
 
-// Handle form submission
+// Handle form submission - POST request
 if (is_post_request()) {
-    // Get form data
+    // Get form data - init.sql column order must match
     $name = trim($_POST['name'] ?? '');
     $pokedex_number = $_POST['pokedex_number'] ?? '';
     $type1 = $_POST['type1'] ?? '';
@@ -22,7 +22,7 @@ if (is_post_request()) {
     $generation = $_POST['generation'] ?? '';
     $region = trim($_POST['region'] ?? '');
 
-    // Stats
+    // Stats - init.sql column order must match
     $hp = $_POST['hp'] ?? '';
     $attack = $_POST['attack'] ?? '';
     $defense = $_POST['defense'] ?? '';
@@ -30,12 +30,12 @@ if (is_post_request()) {
     $sp_defense = $_POST['sp_defense'] ?? '';
     $speed = $_POST['speed'] ?? '';
 
-    // Description
+    // Description - init.sql column order must match
     $description = trim($_POST['description'] ?? '');
     $lore_story = trim($_POST['lore_story'] ?? '');
     $how_to_obtain = trim($_POST['how_to_obtain'] ?? '');
 
-    // Additional info
+    // Additional info - init.sql column order must match
     $legendary_group = trim($_POST['legendary_group'] ?? '');
     $abilities = trim($_POST['abilities'] ?? '');
     $signature_move = trim($_POST['signature_move'] ?? '');
@@ -44,7 +44,7 @@ if (is_post_request()) {
     $is_event_exclusive = isset($_POST['is_event_exclusive']) ? 1 : 0;
     $games_available = trim($_POST['games_available'] ?? '');
 
-    // VALIDATION
+    // VALIDATION - basic checks
     if (empty($name)) {
         $errors[] = "Name is required";
     }
@@ -69,7 +69,7 @@ if (is_post_request()) {
         $errors[] = "Region is required";
     }
 
-    // Validate stats
+    // Validate stats - must be non-negative integers
     $stat_fields = ['hp', 'attack', 'defense', 'sp_attack', 'sp_defense', 'speed'];
     foreach ($stat_fields as $field) {
         if (!is_numeric($$field) || $$field < 0) {
@@ -81,27 +81,26 @@ if (is_post_request()) {
         $errors[] = "Description is required";
     }
 
-    // Image validation
+    // Image validation - ensure file uploaded
     if (!isset($_FILES['pokemon_image']) || $_FILES['pokemon_image']['error'] === UPLOAD_ERR_NO_FILE) {
         $errors[] = "Pokemon image is required";
     }
 
-    // If no errors, process and insert
+    // If no errors, process and insert into database (sql)
     if (count($errors) === 0) {
-        // Process image upload
+        // Process image upload and create thumbnails etc.
         $image_result = process_pokemon_image($_FILES['pokemon_image']);
 
         if ($image_result['success']) {
-            // Calculate base stat total
+            // Calculate base stat total - fetch from form inputs
             $base_stat_total = $hp + $attack + $defense + $sp_attack + $sp_defense + $speed;
 
-            // Empty type2 should be NULL
+            // Empty type2 should be NULL in database 
             if (empty($type2)) {
                 $type2 = null;
             }
 
-            // Prepare INSERT statement
-            // Column order MUST match database schema exactly:
+            // Column order MUST match database schema exactly: 
             // regular_image, thumbnail_image, fullsize_image, shiny_image, has_alternate_forms
             $query = "INSERT INTO pokemon (
                 name, pokedex_number, type1, type2, classification, generation, region,
@@ -115,15 +114,15 @@ if (is_post_request()) {
             $stmt = mysqli_prepare($connection, $query);
 
             if ($stmt) {
-                // Use fullsize as regular_image too
+                // Use fullsize as regular_image too for now
                 $regular_image = $image_result['fullsize'];
                 $thumbnail_image = $image_result['thumbnail'];
                 $fullsize_image = $image_result['fullsize'];
-                $shiny_image = NULL;  // No shiny image for now
+                $shiny_image = NULL;  // already handled in process_pokemon_image
                 $has_alternate_forms = 0;
 
-                // 29 parameters total, type string has 29 characters
-                // Order matches column order in database
+                // 29 parameters total, type string has 29 characters 
+                // Order matches column order in database exactly
                 mysqli_stmt_bind_param(
                     $stmt,
                     "sisssisiiiiiiissssissssssddis",

@@ -1,6 +1,6 @@
 <?php
 session_start();
-// Start output buffering to allow headers after HTML output
+// fixed headers already sent issue
 ob_start();
 
 $page_title = "Team Builder";
@@ -11,7 +11,7 @@ require_once('../private/functions.php');
 
 $connection = db_connect();
 
-// Handle add to team
+// Handle add to team 
 if (isset($_POST['add_to_team'])) {
     $pokemon_id = (int)$_POST['pokemon_id'];
     if (count($_SESSION['team']) < 6 && !in_array($pokemon_id, $_SESSION['team'])) {
@@ -55,7 +55,7 @@ if (!empty($_SESSION['team'])) {
     mysqli_stmt_close($stmt);
 }
 
-// Calculate team stats and find strongest
+// Calculate team stats and find strongest Pokemon
 $total_hp = 0;
 $total_attack = 0;
 $total_defense = 0;
@@ -79,7 +79,7 @@ foreach ($team_pokemon as $pokemon) {
         $type_coverage[$pokemon['type2']] = true;
     }
     
-    // Find strongest (highest base stat total)
+    // Find strongest (highest base stat total) Pokemon
     if ($pokemon['base_stat_total'] > $highest_bst) {
         $highest_bst = $pokemon['base_stat_total'];
         $strongest_pokemon = $pokemon;

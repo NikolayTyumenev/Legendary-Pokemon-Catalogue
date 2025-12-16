@@ -11,7 +11,7 @@ $connection = db_connect();
 $id = $_GET['id'] ?? 0;
 
 if ($id > 0) {
-    // Get image filenames before deleting
+    // Get image filenames before deleting from database
     $query = "SELECT thumbnail_image, fullsize_image FROM pokemon WHERE id = ?";
     $stmt = mysqli_prepare($connection, $query);
     mysqli_stmt_bind_param($stmt, "i", $id);

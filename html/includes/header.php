@@ -1,11 +1,11 @@
 <?php
-// Start session with custom save path for Docker environment
+// New session management - Team builder show different information without it.
 if (session_status() === PHP_SESSION_NONE) {
     ini_set('session.save_path', '/var/lib/php/sessions');
     session_start();
 }
 
-// Initialize team array
+// Initialize team array - same as session management (team_builder.php)
 if (!isset($_SESSION['team'])) {
     $_SESSION['team'] = [];
 }
@@ -27,7 +27,7 @@ require_once('../private/authentication.php');
 <body class="d-flex flex-column min-vh-100">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
-            <a class="navbar-brand" href="index.php">🔥 Pokemon Catalogue</a>
+            <a class="navbar-brand" href="index.php">Pokemon Catalogue</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>

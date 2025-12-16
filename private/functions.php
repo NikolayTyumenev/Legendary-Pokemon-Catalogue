@@ -1,5 +1,5 @@
 <?php
-// functions.php - Image processing and helpers
+// functions.php - Image processing and helpers for Legendary Pokemon Catalogue
 
 function h($string) {
     return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
@@ -19,7 +19,7 @@ function generate_unique_filename($original_filename) {
     return uniqid('pokemon_', true) . '.' . strtolower($extension);
 }
 
-// IMAGE PROCESSING - Creates 200px thumbnail and 720px full-size
+// IMAGE PROCESSING - Creates 200px thumbnail and 720px full-size images
 function process_pokemon_image($file, $target_dir = 'images/pokemon/') {
     $result = [
         'success' => false,
@@ -49,20 +49,20 @@ function process_pokemon_image($file, $target_dir = 'images/pokemon/') {
         return $result;
     }
     
-    // Max 5MB
+    // Max 5MB file size (5 * 1024 * 1024 bytes)
     if ($file['size'] > 5242880) {
         $result['error'] = 'File too large. Max 5MB.';
         return $result;
     }
     
-    // Generate unique filenames
+    // Generate unique filenames for thumbnail and full-size images only in ADDING not manually editing
     $base_filename = generate_unique_filename($file['name']);
     $name_parts = pathinfo($base_filename);
     
     $thumbnail_filename = $name_parts['filename'] . '_thumb.' . $name_parts['extension'];
     $fullsize_filename = $name_parts['filename'] . '_full.' . $name_parts['extension'];
     
-    // Create directories
+    // Create directories if they don't exist (folder structure: images/pokemon/thumbnails/, images/pokemon/fullsize/)
     $thumbnail_dir = $target_dir . 'thumbnails/';
     $fullsize_dir = $target_dir . 'fullsize/';
     
@@ -73,7 +73,7 @@ function process_pokemon_image($file, $target_dir = 'images/pokemon/') {
         mkdir($fullsize_dir, 0755, true);
     }
     
-    // Load image
+    // Load image based on type
     $source_image = null;
     switch ($mime_type) {
         case 'image/jpeg':
@@ -98,18 +98,18 @@ function process_pokemon_image($file, $target_dir = 'images/pokemon/') {
     $orig_width = imagesx($source_image);
     $orig_height = imagesy($source_image);
     
-    // Thumbnail: 200px wide
+    // Thumbnail: 200px wide 
     $thumb_width = 200;
     $thumb_height = (int)(($orig_height / $orig_width) * $thumb_width);
     
-    // Full-size: 720px wide (don't upscale)
+    // Full-size: 720px wide (don't upscale) 
     $full_width = min(720, $orig_width);
     $full_height = (int)(($orig_height / $orig_width) * $full_width);
     
-    // Create thumbnail
+    // Create thumbnail 
     $thumbnail_image = imagecreatetruecolor($thumb_width, $thumb_height);
 
-    // Preserve transparency for PNG/GIF
+    // Preserve transparency for PNG/GIF (if applicable, more like a safeguard)
     if ($mime_type === 'image/png' || $mime_type === 'image/gif') {
         imagealphablending($thumbnail_image, false);
         imagesavealpha($thumbnail_image, true);
@@ -125,7 +125,7 @@ function process_pokemon_image($file, $target_dir = 'images/pokemon/') {
     // Create full-size
     $fullsize_image = imagecreatetruecolor($full_width, $full_height);
 
-    // Preserve transparency for PNG/GIF
+    // Preserve transparency for PNG/GIF (if applicable, more like a safeguard)
     if ($mime_type === 'image/png' || $mime_type === 'image/gif') {
         imagealphablending($fullsize_image, false);
         imagesavealpha($fullsize_image, true);

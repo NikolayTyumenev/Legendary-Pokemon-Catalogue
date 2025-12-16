@@ -7,19 +7,19 @@ require_once('../private/functions.php');
 require_login();
 $connection = db_connect();
 
-// Get stats
+// Get stats for dashboard cards
 $count_query = "SELECT COUNT(*) as total FROM pokemon";
 $count_result = mysqli_query($connection, $count_query);
 $total_pokemon = mysqli_fetch_assoc($count_result)['total'];
 
-// Get recent additions (last 5)
+// Get recent additions (last 5) for display
 $recent_query = "SELECT id, name, pokedex_number, thumbnail_image, classification 
                  FROM pokemon 
                  ORDER BY id DESC 
                  LIMIT 5";
 $recent_result = mysqli_query($connection, $recent_query);
 
-// Get type distribution
+// Get type distribution for top types
 $type_query = "SELECT type1 as type, COUNT(*) as count 
                FROM pokemon 
                GROUP BY type1 
