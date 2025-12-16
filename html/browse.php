@@ -5,18 +5,19 @@ require_once('../private/functions.php');
 
 $connection = db_connect();
 
-// Get filter values from SQL
+// Get filter values from sql
 $search = $_GET['search'] ?? '';
 $type_filter = $_GET['type'] ?? '';
 $generation_filter = $_GET['generation'] ?? '';
 $classification_filter = $_GET['classification'] ?? '';
+$group_filter = $_GET['group'] ?? '';
 
 // Pagination
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $per_page = 12;
 $offset = ($page - 1) * $per_page;
 
-// Build WHERE
+// Build WHERE clause
 $where_conditions = [];
 $params = [];
 $types = '';
@@ -51,6 +52,13 @@ if (!empty($generation_filter)) {
 if (!empty($classification_filter)) {
     $where_conditions[] = "classification = ?";
     $params[] = $classification_filter;
+    $types .= 's';
+}
+
+// Group filter
+if (!empty($group_filter)) {
+    $where_conditions[] = "legendary_group = ?";
+    $params[] = $group_filter;
     $types .= 's';
 }
 
@@ -90,6 +98,18 @@ while ($row = mysqli_fetch_assoc($types_result)) {
     $available_types[] = $row['type1'];
 }
 
+// Get unique groups
+$groups_query = "SELECT DISTINCT legendary_group 
+                 FROM pokemon 
+                 WHERE legendary_group IS NOT NULL 
+                   AND legendary_group != '' 
+                 ORDER BY legendary_group";
+$groups_result = mysqli_query($connection, $groups_query);
+$available_groups = [];
+while ($row = mysqli_fetch_assoc($groups_result)) {
+    $available_groups[] = $row['legendary_group'];
+}
+
 $page_title = "Browse Pokemon Catalogue";
 include('includes/header.php');
 ?>
@@ -104,7 +124,7 @@ include('includes/header.php');
     <div class="card-body">
         <form method="get" action="browse.php" class="row g-3">
             <!-- Search Box -->
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <label for="search" class="form-label">Search</label>
                 <input type="text" class="form-control" id="search" name="search" 
                        placeholder="Search by name, description, abilities..." 
@@ -112,7 +132,7 @@ include('includes/header.php');
             </div>
             
             <!-- Type Filter -->
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <label for="type" class="form-label">Type</label>
                 <select class="form-select" id="type" name="type">
                     <option value="">All Types</option>
@@ -128,7 +148,7 @@ include('includes/header.php');
             <div class="col-md-2">
                 <label for="generation" class="form-label">Generation</label>
                 <select class="form-select" id="generation" name="generation">
-                    <option value="">All Generations</option>
+                    <option value="">All Gens</option>
                     <?php for ($i = 1; $i <= 9; $i++): ?>
                         <option value="<?php echo $i; ?>" <?php echo $generation_filter == $i ? 'selected' : ''; ?>>
                             Gen <?php echo $i; ?>
@@ -138,15 +158,28 @@ include('includes/header.php');
             </div>
             
             <!-- Classification Filter -->
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <label for="classification" class="form-label">Classification</label>
                 <select class="form-select" id="classification" name="classification">
-                    <option value="">All Types</option>
+                    <option value="">All Classifications</option>
                     <option value="Legendary" <?php echo $classification_filter === 'Legendary' ? 'selected' : ''; ?>>Legendary</option>
                     <option value="Mythical" <?php echo $classification_filter === 'Mythical' ? 'selected' : ''; ?>>Mythical</option>
                     <option value="Sub-Legendary" <?php echo $classification_filter === 'Sub-Legendary' ? 'selected' : ''; ?>>Sub-Legendary</option>
                     <option value="Ultra Beast" <?php echo $classification_filter === 'Ultra Beast' ? 'selected' : ''; ?>>Ultra Beast</option>
                     <option value="Paradox" <?php echo $classification_filter === 'Paradox' ? 'selected' : ''; ?>>Paradox</option>
+                </select>
+            </div>
+
+            <!-- Group Filter -->
+            <div class="col-md-4">
+                <label for="group" class="form-label">Legendary Group</label>
+                <select class="form-select" id="group" name="group">
+                    <option value="">All Groups</option>
+                    <?php foreach ($available_groups as $group): ?>
+                        <option value="<?php echo h($group); ?>" <?php echo $group_filter === $group ? 'selected' : ''; ?>>
+                            <?php echo h($group); ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
             </div>
             
@@ -174,7 +207,6 @@ include('includes/header.php');
         <?php while ($pokemon = mysqli_fetch_assoc($result)): ?>
             <div class="col-md-3 mb-4">
                 <div class="card h-100">
-                    <!-- Make image clickable -->
                     <a href="view.php?id=<?php echo $pokemon['id']; ?>">
                         <?php if ($pokemon['thumbnail_image']): ?>
                             <img src="images/pokemon/thumbnails/<?php echo h($pokemon['thumbnail_image']); ?>" 
@@ -188,7 +220,6 @@ include('includes/header.php');
                         <?php endif; ?>
                     </a>
                     <div class="card-body">
-                        <!-- Make title clickable too -->
                         <h5 class="card-title">
                             <a href="view.php?id=<?php echo $pokemon['id']; ?>" class="text-decoration-none text-dark">
                                 <?php echo h($pokemon['name']); ?>
@@ -224,14 +255,12 @@ include('includes/header.php');
 <?php if ($total_pages > 1): ?>
     <nav aria-label="Pokemon pagination">
         <ul class="pagination justify-content-center">
-            <!-- Previous Button -->
             <li class="page-item <?php echo $page <= 1 ? 'disabled' : ''; ?>">
                 <a class="page-link" href="?<?php echo http_build_query(array_merge($_GET, ['page' => $page - 1])); ?>">
                     Previous
                 </a>
             </li>
             
-            <!-- Page Numbers -->
             <?php for ($i = 1; $i <= $total_pages; $i++): ?>
                 <?php if ($i == 1 || $i == $total_pages || ($i >= $page - 2 && $i <= $page + 2)): ?>
                     <li class="page-item <?php echo $i == $page ? 'active' : ''; ?>">
@@ -246,7 +275,6 @@ include('includes/header.php');
                 <?php endif; ?>
             <?php endfor; ?>
             
-            <!-- Next Button -->
             <li class="page-item <?php echo $page >= $total_pages ? 'disabled' : ''; ?>">
                 <a class="page-link" href="?<?php echo http_build_query(array_merge($_GET, ['page' => $page + 1])); ?>">
                     Next
