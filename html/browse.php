@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once('../private/connect.php');
 require_once('../private/functions.php');
 

@@ -21,6 +21,8 @@ require_once('../private/authentication.php');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo isset($page_title) ? h($page_title) : 'Pokemon Catalogue'; ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body class="d-flex flex-column min-vh-100">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -68,3 +70,5 @@ require_once('../private/authentication.php');
     </nav>
     
     <div class="container my-4 flex-fill">
+        <?php echo display_success_message(); ?>
+        <?php echo display_error_message(); ?>

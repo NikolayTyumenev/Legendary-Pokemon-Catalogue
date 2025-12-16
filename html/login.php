@@ -2,6 +2,7 @@
 session_start(); 
 require_once('../private/connect.php');
 require_once('../private/authentication.php');
+require_once('../private/functions.php');
 
 $connection = db_connect();
 

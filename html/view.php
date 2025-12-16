@@ -1,11 +1,13 @@
 <?php
+session_start();
 require_once('../private/connect.php');
 require_once('../private/functions.php');
+require_once('../private/authentication.php');
 
 $connection = db_connect();
 
 $id = $_GET['id'] ?? 0;
-$show_shiny = $_GET['shiny'] ?? 0; // Check if shiny version should be shown
+$showing_shiny = $_GET['shiny'] ?? 0;
 
 $query = "SELECT * FROM pokemon WHERE id = ? LIMIT 1";
 $stmt = mysqli_prepare($connection, $query);
@@ -35,41 +37,38 @@ include('includes/header.php');
 <div class="row">
     <div class="col-md-4">
         <?php 
-        // Determine which image to show
-        $current_image = $show_shiny && $pokemon['shiny_image'] 
+        $current_image = $showing_shiny && $pokemon['shiny_image'] 
             ? $pokemon['shiny_image'] 
             : $pokemon['fullsize_image'];
         ?>
         
-        <?php if ($current_image): ?>
-            <img src="images/pokemon/fullsize/<?php echo h($current_image); ?>" 
-                 class="img-fluid rounded shadow" 
-                 alt="<?php echo h($pokemon['name']); ?>">
-        <?php else: ?>
-            <div class="bg-light rounded p-5 text-center">
-                <span class="text-muted">No Image Available</span>
-            </div>
-        <?php endif; ?>
-        
-        <!-- Shiny Toggle -->
-        <?php if ($pokemon['shiny_image']): ?>
-            <div class="card mt-2">
-                <div class="card-body p-2 text-center">
-                    <?php if ($show_shiny): ?>
-                        <a href="view.php?id=<?php echo $pokemon['id']; ?>" class="btn btn-sm btn-secondary w-100">
-                            ✨ Show Normal Version
-                        </a>
-                    <?php else: ?>
-                        <a href="view.php?id=<?php echo $pokemon['id']; ?>&shiny=1" class="btn btn-sm btn-warning w-100">
-                            ⭐ Show Shiny Version
-                        </a>
-                    <?php endif; ?>
+        <div class="pokemon-image-container">
+            <?php if ($pokemon['shiny_image']): ?>
+                <span class="shiny-star <?php echo $showing_shiny ? 'active' : 'inactive'; ?>" 
+                      id="shinyToggle" 
+                      onclick="toggleShiny()"
+                      title="<?php echo $showing_shiny ? 'Show Normal Version' : 'Show Shiny Version'; ?>">
+                    ✨
+                </span>
+                
+                <span class="shiny-badge <?php echo $showing_shiny ? 'show' : ''; ?>" id="shinyBadge">
+                    ✨ Shiny
+                </span>
+            <?php endif; ?>
+            
+            <?php if ($current_image): ?>
+                <img src="images/pokemon/fullsize/<?php echo h($current_image); ?>" 
+                     class="img-fluid rounded shadow pokemon-main-image" 
+                     id="pokemonImage"
+                     alt="<?php echo h($pokemon['name']); ?>">
+            <?php else: ?>
+                <div class="bg-light rounded p-5 text-center shadow">
+                    <span class="text-muted">No Image Available</span>
                 </div>
-            </div>
-        <?php endif; ?>
+            <?php endif; ?>
+        </div>
         
-        <!-- Team Builder Button -->
-        <div class="card mt-2">
+        <div class="card mt-3">
             <div class="card-body p-2">
                 <form method="post" action="team_builder.php">
                     <input type="hidden" name="pokemon_id" value="<?php echo $pokemon['id']; ?>">
@@ -95,9 +94,6 @@ include('includes/header.php');
         <h1>
             <?php echo h($pokemon['name']); ?> 
             <span class="text-muted">#<?php echo h($pokemon['pokedex_number']); ?></span>
-            <?php if ($show_shiny): ?>
-                <span class="badge bg-warning">⭐ Shiny</span>
-            <?php endif; ?>
         </h1>
         
         <p class="lead">
@@ -167,21 +163,68 @@ include('includes/header.php');
             </div>
         </div>
         
-        <div class="btn-group" role="group">
-            <?php if (is_logged_in()): ?>
-                <a href="edit.php?id=<?php echo $pokemon['id']; ?>" class="btn btn-warning">
-                    Edit
+        <?php if (is_logged_in()): ?>
+        <div class="card dashboard-card shadow-sm">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="mb-0">
+                    <i class="bi bi-gear-fill text-warning"></i> Management Options
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                <a href="edit.php?id=<?php echo $pokemon['id']; ?>" class="admin-menu-item text-dark">
+                    <i class="bi bi-pencil-fill text-warning"></i>
+                    <div>
+                        <strong>Edit Pokemon</strong>
+                        <small class="d-block text-muted">Modify stats, description, and details</small>
+                    </div>
                 </a>
-                <a href="delete.php?id=<?php echo $pokemon['id']; ?>" class="btn btn-danger">
-                    Delete
+                <a href="delete.php?id=<?php echo $pokemon['id']; ?>" class="admin-menu-item text-danger">
+                    <i class="bi bi-trash-fill"></i>
+                    <div>
+                        <strong>Delete Pokemon</strong>
+                        <small class="d-block text-muted">Permanently remove from catalogue</small>
+                    </div>
                 </a>
-            <?php endif; ?>
-            <a href="browse.php" class="btn btn-secondary">
-                Back to Browse
+                <hr class="my-0">
+                <a href="browse.php" class="admin-menu-item text-dark">
+                    <i class="bi bi-arrow-left-circle text-secondary"></i>
+                    <div>
+                        <strong>Back to Browse</strong>
+                        <small class="d-block text-muted">Return to Pokemon catalogue</small>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <?php else: ?>
+        <div class="mt-4">
+            <a href="browse.php" class="btn btn-secondary btn-lg">
+                <i class="bi bi-arrow-left-circle"></i> Back to Browse
             </a>
         </div>
+        <?php endif; ?>
     </div>
 </div>
+
+<script>
+function toggleShiny() {
+    const star = document.getElementById('shinyToggle');
+    const image = document.getElementById('pokemonImage');
+    const currentUrl = new URL(window.location.href);
+    
+    star.classList.add('sparkle');
+    image.classList.add('shiny-flash');
+    
+    if (currentUrl.searchParams.get('shiny') === '1') {
+        currentUrl.searchParams.delete('shiny');
+    } else {
+        currentUrl.searchParams.set('shiny', '1');
+    }
+    
+    setTimeout(() => {
+        window.location.href = currentUrl.toString();
+    }, 300);
+}
+</script>
 
 <?php
 db_disconnect($connection);

@@ -1,4 +1,5 @@
 <?php
+session_start();
 // Start output buffering to allow headers after HTML output
 ob_start();
 
