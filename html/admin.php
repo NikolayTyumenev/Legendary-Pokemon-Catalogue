@@ -166,13 +166,6 @@ include('includes/header.php');
                 <small class="d-block text-muted">Add a new legendary or mythical Pokemon</small>
             </div>
         </a>
-        <a href="admin_link_shiny_images.php" class="admin-menu-item text-dark">
-            <i class="bi bi-stars text-warning"></i>
-            <div>
-                <strong>Manage Shiny Images</strong>
-                <small class="d-block text-muted">Link shiny variants to Pokemon</small>
-            </div>
-        </a>
         <hr class="my-0">
         <a href="logout.php" class="admin-menu-item text-danger">
             <i class="bi bi-box-arrow-right"></i>
