@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Dec 16, 2025 at 01:09 AM
+-- Generation Time: Dec 17, 2025 at 12:19 AM
 -- Server version: 8.0.43
 -- PHP Version: 8.2.27
 
@@ -54,19 +54,19 @@ INSERT INTO `group_3_catalogue_admin` (`id`, `username`, `password`, `created_at
 CREATE TABLE `pokemon` (
   `id` int NOT NULL,
   `name` varchar(100) NOT NULL,
-  `pokedex_number` int NOT NULL,
+  `pokedex_number` smallint DEFAULT NULL,
   `type1` varchar(20) NOT NULL,
   `type2` varchar(20) DEFAULT NULL,
   `classification` enum('Legendary','Mythical','Sub-Legendary','Ultra Beast','Paradox') NOT NULL,
-  `generation` int NOT NULL,
+  `generation` tinyint DEFAULT NULL,
   `region` varchar(50) NOT NULL,
-  `hp` int NOT NULL,
-  `attack` int NOT NULL,
-  `defense` int NOT NULL,
-  `sp_attack` int NOT NULL,
-  `sp_defense` int NOT NULL,
-  `speed` int NOT NULL,
-  `base_stat_total` int NOT NULL,
+  `hp` tinyint UNSIGNED DEFAULT NULL,
+  `attack` tinyint UNSIGNED DEFAULT NULL,
+  `defense` tinyint UNSIGNED DEFAULT NULL,
+  `sp_attack` tinyint UNSIGNED DEFAULT NULL,
+  `sp_defense` tinyint UNSIGNED DEFAULT NULL,
+  `speed` tinyint UNSIGNED DEFAULT NULL,
+  `base_stat_total` smallint UNSIGNED DEFAULT NULL,
   `regular_image` varchar(255) DEFAULT NULL,
   `thumbnail_image` varchar(255) DEFAULT NULL,
   `fullsize_image` varchar(255) DEFAULT NULL,
